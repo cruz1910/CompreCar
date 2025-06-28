@@ -1,23 +1,36 @@
 package com.comprecar.dto;
 
-import java.util.logging.Logger;
-
-import org.slf4j.LoggerFactory;
-
 import com.comprecar.enums.TipoUsuario;
 import com.comprecar.exception.UsuarioException;
-
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class UsuarioDTO {
-    private static final org.slf4j.Logger logger = LoggerFactory.getLogger(UsuarioDTO.class);
+    private static final Logger logger = LoggerFactory.getLogger(UsuarioDTO.class);
     private static final int MAX_NOME_LENGTH = 100;
     private static final int MAX_EMAIL_LENGTH = 255;
 
-   public UsuarioDTO() {
+    private Long id;
+
+    @NotBlank(message = "Nome é obrigatório")
+    @Size(min = 2, max = 100, message = "O nome do usuário deve conter ao menos 2 caracteres")
+    private String nome;
+
+    @NotBlank(message = "Email é obrigatório")
+    @Email(message = "O email deve ser válido")
+    @Size(max = 255, message = "O email deve ter no máximo 255 caracteres")
+    private String email;
+
+    @NotBlank(message = "Senha é obrigatória")
+    @Size(min = 8, max = 64, message = "A senha deve ter ao menos 8 caracteres")
+    private String senha;
+    private String confirmacaoSenha;
+    private TipoUsuario tipo;
+
+    public UsuarioDTO() {
         logger.debug("Criado novo DTO vazio");
     }
 
@@ -138,5 +151,3 @@ public class UsuarioDTO {
         return confirmacaoSenha;
     }
 }
-
-
