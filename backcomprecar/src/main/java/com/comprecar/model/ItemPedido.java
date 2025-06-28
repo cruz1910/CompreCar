@@ -2,52 +2,57 @@ package com.comprecar.model;
 
 import java.math.BigDecimal;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 
-    @Entity
-    @Table(name = "intens_pedidos")
-    public class ItemPedido {
-        @Id
-        @GeneratedValue(strategy = GeneratedValue.IDENTITY)
-        private Long id;
+@Entity
+@Table(name = "itens_pedido")
+public class ItemPedido {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-        @ManyToOne
-        @JoinColumn(name = "pedido_id", nullable = false)
-        private Veiculo veiculo;
+    @ManyToOne
+    @JoinColumn(name = "pedido_id", nullable = false)
+    private Pedido pedido;
 
-        @Column(nullable = false)
-        private BigDecimal preco;
+    @ManyToOne
+    @JoinColumn(name = "veiculo_id", nullable = false)
+    private Veiculo veiculo;
 
-        public Long getId() {
-            return id;
-        }
+    @Column(nullable = false)
+    private BigDecimal preco;
 
-        public void setId(Long id) {
-            this.id = id;
-        }
+    // Getters e Setters
+    public Long getId() {
+        return id;
+    }
 
-        public Veiculo getVeiculo() {
-            return veiculo;
-        }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-        public void setVeiculo(Veiculo veiculo) {
-            this.veiculo = veiculo;
-        }
+    public Pedido getPedido() {
+        return pedido;
+    }
 
-        public BigDecimal getPreco() {
-            return preco;
-        }
+    public void setPedido(Pedido pedido) {
+        this.pedido = pedido;
+    }
 
-        public void setPreco(BigDecimal preco) {
-            this.preco = preco;
-        }
-        
+    public Veiculo getVeiculo() {
+        return veiculo;
+    }
 
+    public void setVeiculo(Veiculo veiculo) {
+        this.veiculo = veiculo;
+    }
+
+    public BigDecimal getPreco() {
+        return preco;
+    }
+
+    public void setPreco(BigDecimal preco) {
+        this.preco = preco;
+    }
 }

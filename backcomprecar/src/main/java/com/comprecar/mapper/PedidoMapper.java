@@ -10,6 +10,7 @@ import com.comprecar.dto.ItemPedidoDTO;
 import com.comprecar.dto.PedidoDTO;
 import com.comprecar.model.ItemPedido;
 import com.comprecar.model.Pedido;
+import com.comprecar.enums.StatusPedido;
 
 @Component
 public class PedidoMapper {

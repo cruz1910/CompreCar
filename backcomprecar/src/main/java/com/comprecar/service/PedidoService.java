@@ -67,35 +67,35 @@ public class PedidoService {
     }
 
     @Transactional
-public Pedido atualizarStatusPedido(Long id, StatusPedido novoStatus) {
-    Pedido pedidoExistente = pedidoRepository.findById(id)
-            .orElseThrow(() -> new PedidoException("Pedido não encontrado com ID: " + id));
+    public Pedido atualizarStatusPedido(Long id, StatusPedido novoStatus) {
+        Pedido pedidoExistente = pedidoRepository.findById(id)
+                .orElseThrow(() -> new PedidoException("Pedido não encontrado com ID: " + id));
 
-    pedidoExistente.setStatus(novoStatus.name());
-    Pedido pedidoAtualizado = pedidoRepository.save(pedidoExistente);
+        pedidoExistente.setStatus(novoStatus.name());
+        Pedido pedidoAtualizado = pedidoRepository.save(pedidoExistente);
 
-    // Se o pedido foi cancelado, libera os veículos
-    if (novoStatus == StatusPedido.CANCELADO) {
-        atualizarDisponibilidadeVeiculos(pedidoAtualizado, true);
-    }
+        // Se o pedido foi cancelado, libera os veículos
+        if (novoStatus == StatusPedido.CANCELADO) {
+            atualizarDisponibilidadeVeiculos(pedidoAtualizado, true);
+        }
 
-    if (novoStatus == StatusPedido.FINALIZADO) {
-        // Seu código para finalizar pedido (excluir itens e veículos) permanece aqui
-        List<ItemPedido> itens = List.copyOf(pedidoAtualizado.getItens());
-        pedidoAtualizado.getItens().clear();
-        pedidoRepository.save(pedidoAtualizado);
-        itemPedidoRepository.deleteAll(itens);
+        if (novoStatus == StatusPedido.FINALIZADO) {
+            // Seu código para finalizar pedido (excluir itens e veículos) permanece aqui
+            List<ItemPedido> itens = List.copyOf(pedidoAtualizado.getItens());
+            pedidoAtualizado.getItens().clear();
+            pedidoRepository.save(pedidoAtualizado);
+            itemPedidoRepository.deleteAll(itens);
 
-        for (ItemPedido item : itens) {
-            Veiculo veiculo = item.getVeiculo();
-            if (veiculo != null && !veiculoRelacionadoAOutrosPedidos(veiculo, pedidoAtualizado)) {
-                veiculoRepository.delete(veiculo);
+            for (ItemPedido item : itens) {
+                Veiculo veiculo = item.getVeiculo();
+                if (veiculo != null && !veiculoRelacionadoAOutrosPedidos(veiculo, pedidoAtualizado)) {
+                    veiculoRepository.delete(veiculo);
+                }
             }
         }
-    }
 
-    return pedidoAtualizado;
-}
+        return pedidoAtualizado;
+    }
 
     @Transactional
     public void deletarPedido(Long id) {

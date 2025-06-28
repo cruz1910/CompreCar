@@ -1,18 +1,18 @@
 package com.comprecar.controller;
-
-
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 
 import com.comprecar.dto.PedidoDTO;
+import com.comprecar.exception.PedidoException;
 import com.comprecar.mapper.PedidoMapper;
 import com.comprecar.model.ItemPedido;
 import com.comprecar.model.Pedido;
 import com.comprecar.model.Usuario;
 import com.comprecar.model.Veiculo;
 import com.comprecar.repository.UsuarioRepository;
+import com.comprecar.repository.VeiculoRepository;
 import com.comprecar.service.PedidoService;
 
 import java.util.List;
@@ -31,7 +31,7 @@ public class PedidoController {
     private UsuarioRepository usuarioRepo;
 
     @Autowired
-    private com.comprecar.repository.VeiculoRepository veiculoRepo;
+    private VeiculoRepository veiculoRepo;
 
     @Autowired
     private PedidoMapper mapper;

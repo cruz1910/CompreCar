@@ -1,10 +1,12 @@
 package com.comprecar.mapper;
 
-import com.comprecar.dto.UsuarioDTO;
-import com.comprecar.model.Usuario;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
+
+import com.comprecar.dto.UsuarioDTO;
+import com.comprecar.model.Usuario;
+
 
 @Mapper
 public interface UsuarioMapper {
@@ -18,4 +20,3 @@ public interface UsuarioMapper {
     @Mapping(target = "confirmacaoSenha", ignore = true)
     UsuarioDTO toUsuarioDTO(Usuario usuario);
 }
-
