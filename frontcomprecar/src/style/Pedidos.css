@@ -1,0 +1,55 @@
+.carrinho {
+  background-color: white;
+  padding: 20px;
+  margin-bottom: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 8px rgba(0,0,0,0.1);
+}
+
+.carrinho ul {
+  list-style: none;
+  padding: 0;
+}
+
+.carrinho li {
+  margin-bottom: 8px;
+}
+
+.carrinho button {
+  margin-left: 10px;
+  background-color: #2563eb;
+  color: white;
+  border: none;
+  padding: 4px 8px;
+  cursor: pointer;
+}
+
+.carrinho button:hover {
+  background-color: #1d4ed8;
+}
+
+table {
+  width: 100%;
+  background-color: white;
+  border-collapse: collapse;
+}
+
+th, td {
+  border: 1px solid #ddd;
+  padding: 10px;
+  text-align: center;
+}
+
+th {
+  background-color: #1f2937;
+  color: white;
+}
+
+td button {
+  padding: 5px 10px;
+  cursor: pointer;
+}
+
+td button:hover {
+  opacity: 0.8;
+}
