@@ -41,7 +41,6 @@ public class Veiculo {
     @OneToMany(mappedBy = "veiculo")
     private List<ItemPedido> itensPedido;
 
-    // Getters e Setters
     public Long getId() {
         return id;
     }

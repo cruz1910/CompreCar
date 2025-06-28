@@ -23,7 +23,7 @@ public class ItemPedido {
     @Column(nullable = false)
     private BigDecimal preco;
 
-    // Getters e Setters
+   
     public Long getId() {
         return id;
     }

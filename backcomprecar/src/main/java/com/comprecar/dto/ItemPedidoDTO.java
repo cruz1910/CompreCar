@@ -12,7 +12,8 @@ public class ItemPedidoDTO {
     @NotNull(message = "Preço é obrigatório")
     private BigDecimal preco;
 
-    public ItemPedidoDTO() {}
+    public ItemPedidoDTO() {
+    }
 
     public ItemPedidoDTO(Long id, Long veiculoId, BigDecimal preco) {
         this.id = id;
@@ -20,10 +21,27 @@ public class ItemPedidoDTO {
         this.preco = preco;
     }
 
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
-    public Long getVeiculoId() { return veiculoId; }
-    public void setVeiculoId(Long veiculoId) { this.veiculoId = veiculoId; }
-    public BigDecimal getPreco() { return preco; }
-    public void setPreco(BigDecimal preco) { this.preco = preco; }
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Long getVeiculoId() {
+        return veiculoId;
+    }
+
+    public void setVeiculoId(Long veiculoId) {
+        this.veiculoId = veiculoId;
+    }
+
+    public BigDecimal getPreco() {
+        return preco;
+    }
+
+    public void setPreco(BigDecimal preco) {
+        this.preco = preco;
+    }
 }

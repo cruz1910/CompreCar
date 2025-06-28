@@ -5,6 +5,7 @@ import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 
 import com.comprecar.dto.PedidoDTO;
+import com.comprecar.enums.StatusPedido;
 import com.comprecar.exception.PedidoException;
 import com.comprecar.mapper.PedidoMapper;
 import com.comprecar.model.ItemPedido;

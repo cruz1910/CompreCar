@@ -1,12 +1,12 @@
 package com.comprecar.service;
 
+import com.comprecar.dto.VeiculoDTO;
+import com.comprecar.exception.PedidoException;
+import com.comprecar.model.Veiculo;
+import com.comprecar.repository.VeiculoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import com.comprecar.dto.VeiculoDTO;
-import com.comprecar.model.Veiculo;
-import com.comprecar.repository.VeiculoRepository;
 
 import java.time.LocalDate;
 import java.util.List;

@@ -1,18 +1,19 @@
 package com.comprecar.service;
-
-import java.math.BigDecimal;
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.comprecar.enums.StatusPedido;
+import com.comprecar.exception.PedidoException;
 import com.comprecar.model.ItemPedido;
 import com.comprecar.model.Pedido;
 import com.comprecar.model.Veiculo;
 import com.comprecar.repository.ItemPedidoRepository;
 import com.comprecar.repository.PedidoRepository;
 import com.comprecar.repository.VeiculoRepository;
+
+import java.math.BigDecimal;
+import java.util.List;
 
 @Service
 public class PedidoService {
@@ -67,35 +68,35 @@ public class PedidoService {
     }
 
     @Transactional
-    public Pedido atualizarStatusPedido(Long id, StatusPedido novoStatus) {
-        Pedido pedidoExistente = pedidoRepository.findById(id)
-                .orElseThrow(() -> new PedidoException("Pedido não encontrado com ID: " + id));
+public Pedido atualizarStatusPedido(Long id, StatusPedido novoStatus) {
+    Pedido pedidoExistente = pedidoRepository.findById(id)
+            .orElseThrow(() -> new PedidoException("Pedido não encontrado com ID: " + id));
 
-        pedidoExistente.setStatus(novoStatus.name());
-        Pedido pedidoAtualizado = pedidoRepository.save(pedidoExistente);
+    pedidoExistente.setStatus(novoStatus.name());
+    Pedido pedidoAtualizado = pedidoRepository.save(pedidoExistente);
 
-        // Se o pedido foi cancelado, libera os veículos
-        if (novoStatus == StatusPedido.CANCELADO) {
-            atualizarDisponibilidadeVeiculos(pedidoAtualizado, true);
-        }
+    // Se o pedido foi cancelado, libera os veículos
+    if (novoStatus == StatusPedido.CANCELADO) {
+        atualizarDisponibilidadeVeiculos(pedidoAtualizado, true);
+    }
 
-        if (novoStatus == StatusPedido.FINALIZADO) {
-            // Seu código para finalizar pedido (excluir itens e veículos) permanece aqui
-            List<ItemPedido> itens = List.copyOf(pedidoAtualizado.getItens());
-            pedidoAtualizado.getItens().clear();
-            pedidoRepository.save(pedidoAtualizado);
-            itemPedidoRepository.deleteAll(itens);
+    if (novoStatus == StatusPedido.FINALIZADO) {
+        // Seu código para finalizar pedido (excluir itens e veículos) permanece aqui
+        List<ItemPedido> itens = List.copyOf(pedidoAtualizado.getItens());
+        pedidoAtualizado.getItens().clear();
+        pedidoRepository.save(pedidoAtualizado);
+        itemPedidoRepository.deleteAll(itens);
 
-            for (ItemPedido item : itens) {
-                Veiculo veiculo = item.getVeiculo();
-                if (veiculo != null && !veiculoRelacionadoAOutrosPedidos(veiculo, pedidoAtualizado)) {
-                    veiculoRepository.delete(veiculo);
-                }
+        for (ItemPedido item : itens) {
+            Veiculo veiculo = item.getVeiculo();
+            if (veiculo != null && !veiculoRelacionadoAOutrosPedidos(veiculo, pedidoAtualizado)) {
+                veiculoRepository.delete(veiculo);
             }
         }
-
-        return pedidoAtualizado;
     }
+
+    return pedidoAtualizado;
+}
 
     @Transactional
     public void deletarPedido(Long id) {
