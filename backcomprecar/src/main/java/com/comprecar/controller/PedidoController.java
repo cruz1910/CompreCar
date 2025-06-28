@@ -7,7 +7,7 @@ import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 
 import com.comprecar.dto.PedidoDTO;
-import com.comprecar.maper.PedidoMapper;
+import com.comprecar.mapper.PedidoMapper;
 import com.comprecar.model.ItemPedido;
 import com.comprecar.model.Pedido;
 import com.comprecar.model.Usuario;
@@ -30,7 +30,7 @@ public class PedidoController {
     private UsuarioRepository usuarioRepo;
 
     @Autowired
-    private com.comprecar.reppsitory.VeiculoRepository veiculoRepo;
+    private com.comprecar.repository.VeiculoRepository veiculoRepo;
 
     @Autowired
     private PedidoMapper mapper;

@@ -1,7 +1,7 @@
 package com.comprecar.repository;
 
-import com.projeto.model.Usuario;
-import com.projeto.enums.TipoUsuario;
+import com.comprecar.model.Usuario;
+import com.comprecar.enums.TipoUsuario;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

@@ -6,7 +6,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
-@mapper
+@Mapper
 public interface UsuarioMapper {
     UsuarioMapper INSTANCE = Mappers.getMapper(UsuarioMapper.class);
 
@@ -18,3 +18,4 @@ public interface UsuarioMapper {
     @Mapping(target = "confirmacaoSenha", ignore = true)
     UsuarioDTO toUsuarioDTO(Usuario usuario);
 }
+

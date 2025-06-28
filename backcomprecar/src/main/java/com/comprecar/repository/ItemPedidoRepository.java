@@ -1,6 +1,6 @@
 package com.comprecar.repository;
 
-import com.projeto.model.ItemPedido;
+import com.comprecar.model.ItemPedido;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

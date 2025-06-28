@@ -1,4 +1,4 @@
-package com.comprecar.maper;
+package com.comprecar.mapper;
 
 public class VeiculoMapper {
     

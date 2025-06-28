@@ -1,4 +1,4 @@
-package com.comprecar.reppsitory;
+package com.comprecar.repository;
 
 public class VeiculoRepository {
     
