@@ -11,6 +11,7 @@ import com.comprecar.mapper.PedidoMapper;
 import com.comprecar.model.ItemPedido;
 import com.comprecar.model.Pedido;
 import com.comprecar.model.Usuario;
+import com.comprecar.model.Veiculo;
 import com.comprecar.repository.UsuarioRepository;
 import com.comprecar.service.PedidoService;
 
