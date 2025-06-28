@@ -4,6 +4,7 @@ import java.util.logging.Logger;
 
 import org.slf4j.LoggerFactory;
 
+import com.comprecar.enums.TipoUsuario;
 import com.comprecar.exception.UsuarioException;
 
 import jakarta.validation.constraints.Email;
