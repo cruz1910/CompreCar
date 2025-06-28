@@ -1,4 +1,4 @@
-package com.projeto.controller;
+package com.comprecar.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
