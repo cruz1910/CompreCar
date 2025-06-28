@@ -1,0 +1,26 @@
+.connection-error {
+  padding: 20px;
+  margin: 20px;
+  background-color: #f8d7da;
+  border: 1px solid #f5c6cb;
+  border-radius: 4px;
+  text-align: center;
+}
+
+.connection-error h2 {
+  color: #721c24;
+  margin-bottom: 15px;
+}
+
+.connection-error ul {
+  list-style: none;
+  padding: 0;
+  margin: 15px 0;
+}
+
+.connection-error li {
+  margin: 5px 0;
+  padding: 5px;
+  background-color: #fff3f3;
+  border-left: 3px solid #f5c6cb;
+}
