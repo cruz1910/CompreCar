@@ -1,4 +1,4 @@
-package com.projeto.dto;
+package com.comprecar.dto;
 
 import jakarta.validation.constraints.NotBlank;
 
