@@ -1,0 +1,182 @@
+.veiculo-form {
+    background-color: white;
+    padding: 15px;
+    margin: 20px auto;
+    border-radius: 8px;
+    box-shadow: 0 0 8px rgba(0,0,0,0.1);
+    width: 100%;
+    max-width: 600px;
+    box-sizing: border-box;
+  }
+  
+  .field-pair {
+    display: flex;
+    gap: 15px;
+    width: 100%;
+  }
+  
+  .field-item {
+    flex: 1;
+    width: 45%;
+  }
+  
+  .field-item label {
+    display: block;
+    margin-bottom: 4px;
+    color: #333;
+  }
+  
+  .field-item input,
+  .field-item textarea {
+    width: 100%;
+    padding: 6px;
+    box-sizing: border-box;
+  }
+  
+  .field-item textarea {
+    height: 120px;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    resize: vertical;
+  }
+  
+  .veiculo-form input,
+  .veiculo-form textarea {
+    margin-right: 5px;
+    margin-bottom: 8px;
+    padding: 6px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  
+  .veiculo-form textarea {
+    height: 120px;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    resize: vertical;
+    width: 570px;
+  }
+  
+  .veiculo-form button {
+    padding: 8px 35px;
+    background-color: #2563eb;
+    color: white;
+    border: none;
+    cursor: pointer;
+    margin: 15px auto;
+    display: block;
+  }
+  
+  .veiculo-form-group {
+    margin-bottom: 12px;
+  }
+  
+  .veiculo-form-group label {
+    display: block;
+    margin-bottom: 4px;
+    color: #333;
+  }
+  
+  .image-upload-container {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .image-preview {
+    max-width: 200px;
+    max-height: 200px;
+    object-fit: cover;
+    border-radius: 4px;
+    margin-bottom: 10px;
+  }
+  
+  .remove-image-btn {
+    background-color: #ef4444;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .submit-btn{
+    padding: 8px 12px;
+    background-color: #2563eb;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 6px;
+  }
+  .submit-btn:hover{
+    opacity: 0.8;
+  }
+  
+  .edit-btn{
+    padding: 8px 12px;
+    background-color: #2563eb;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 6px;
+  }
+  .delete-btn{
+    padding: 8px 12px;
+    background-color: #2563eb;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 6px;
+  }
+  .delete-btn:hover{
+      background-color: #dc2626;
+  }
+  
+  
+  .remove-image-btn:hover {
+    background-color: #dc2626;
+  }
+  
+  input[type="file"] {
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .form button:hover {
+    background-color: #1d4ed8;
+  }
+  
+  table {
+    width: 100%;
+    background-color: white;
+    border-collapse: collapse;
+  }
+  
+  th, td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: center;
+  }
+  
+  th {
+    background-color: #1f2937;
+    color: white;
+  }
+  
+  td button {
+    margin: 0 5px;
+    padding: 5px 10px;
+    cursor: pointer;
+  
+  }
+  
+  td button:hover {
+    opacity: 0.8;
+  }
+  
