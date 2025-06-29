@@ -1,22 +1,13 @@
+// App.js
 import React, { useEffect, useState } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
-
-import Login from "./pages/Login.jsx";
-import Veiculos from "./pages/Veiculos.jsx";
-import Funcionarios from "./pages/Funcionarios.jsx";
-import Cart from "./pages/Cart.jsx";
-import Register from "./pages/Register.jsx";
-import ListaPedidos from "./pages/ListaPedidos.jsx";
-
-import NavbarSwitcher from "./components/NavbarSwitcher.jsx";
-import PrivateRoute from "./routes/PrivateRoute.jsx";
-import PrivateRouteAdmin from "./routes/PrivateRouteAdmin.jsx";
-
-import { testConnection } from "./services/testApi";
-import "./styles/ConnectionError.css";
-import PrivateRouteAdminFuncionario from "./routes/PrivateRouteAdminFuncionario.jsx";
-import PedidosCliente from "./pages/PedidosClientes.jsx";
-import Dashboard from "./pages/Dashboard.jsx";
+import NavbarSwitcher from "./components/NavbarSwitcher";
+import Register from "./pages/Register";
+import Veiculos from "./pages/Veiculos";
+import Funcionarios from "./pages/Funcionarios";
+import Cart from "./pages/Cart";
+import ListaPedidos from "./pages/ListaPedidos";
+import PagInicial from "./pages/PagInicial"
 
 function App() {
   const [isConnected, setIsConnected] = useState(false);
@@ -69,12 +60,11 @@ function App() {
         />
         <Route path="/login" element={<Login />} />
         <Route path="/cadastro" element={<Register />} />
-
         <Route
           path="/painel"
           element={
             <PrivateRoute>
-              <Dashboard />
+             <PagInicial />
             </PrivateRoute>
           }
         />
@@ -114,11 +104,10 @@ function App() {
           path="/meus-pedidos"
           element={
             <PrivateRoute>
-              <PedidosCliente />
+              <PedidosClientes />
             </PrivateRoute>
           }
         />
-
       </Routes>
     </>
   );
