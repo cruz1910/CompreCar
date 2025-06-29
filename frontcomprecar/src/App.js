@@ -1,13 +1,21 @@
 // App.js
 import React, { useEffect, useState } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
+import { testConnection } from './services/TesteApi';
+
 import NavbarSwitcher from "./components/NavbarSwitcher";
 import Register from "./pages/Register";
 import Veiculos from "./pages/Veiculos";
 import Funcionarios from "./pages/Funcionarios";
 import Cart from "./pages/Cart";
 import ListaPedidos from "./pages/ListaPedidos";
+import PedidosClientes from "./pages/PedidosCliente"
 import PagInicial from "./pages/PagInicial"
+import Login from "./pages/login";
+import PrivateRoute from "./routes/PrivateRoute"
+import PrivateRouteAdmin from "./routes/PrivateRouteAdmin"
+import PrivateRouteAdminFuncionario from "./routes/PrivateRouteAdminFuncionario"
+
 
 function App() {
   const [isConnected, setIsConnected] = useState(false);

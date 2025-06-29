@@ -1,7 +1,6 @@
-import React from 'react'
 import React, { useEffect, useState } from 'react';
 import api from '../services/api';
-import '../styles/PagInicial.css';
+import '../style/PagInicial.css';
 
 
 const PagInicial = () => {

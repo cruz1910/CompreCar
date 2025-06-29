@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import api from '../services/api'; // importa api axios configurada
-import '../styles/Pedidos.css'
+import '../style/Pedidos.css'
 
 export default function ListaPedidos() {
   const user = JSON.parse(localStorage.getItem("user"));

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import api from "../services/api";
-import '../styles/Pedidos.css';
+import '../style/Pedidos.css';
 
 const PedidosCliente = () => {
   const [pedidos, setPedidos] = useState([]);
@@ -17,7 +17,7 @@ const PedidosCliente = () => {
 
         if (user.tipo !== "CLIENTE") return;
 
-        const response = await api.get(/pedidos/cliente/$,{user,id});
+        const response = await api.get(`/pedidos/cliente/${user.id}`);
         setPedidos(response.data);
       } catch (err) {
         console.error("Erro ao buscar pedidos:", err);
@@ -34,7 +34,7 @@ const PedidosCliente = () => {
     if (!window.confirm("Deseja realmente cancelar este pedido?")) return;
 
     try {
-      await api.put(/pedidos/$,{id}/status, { status: "CANCELADO" });
+      await api.put(`/pedidos/${id}/status`, { status: "CANCELADO" });
       setPedidos((anterior) =>
         anterior.map((p) =>
           p.id === id ? { ...p, status: "CANCELADO" } : p

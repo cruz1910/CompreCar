@@ -1,44 +1,56 @@
-import React, { useState } from 'react'
+import React, { useState } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
+import api from '../services/api';
 import "../style/Registro.css"
 
-
 const Register = () => {
-  const [formData, setformData] = useState({
+  const [formData, setFormData] = useState({
     nome: '',
     email: '',
     senha: '',
-    confirmacaoSenha: ''
+    confirmacaoSenha: '' // Certifique-se que esta chave existe no estado inicial
   });
+
+  const [error, setError] = useState('');
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    console.log(`Input "${name}" alterado para: "${value}"`);
+    // Adicionado console.log para ver o que está sendo capturado por handleChange
+    console.log(`Input "${name}" alterado para: "${value}"`); 
     setFormData(prev => ({
       ...prev,
       [name]: value
     }));
   };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    // Validate password match
     if (formData.senha !== formData.confirmacaoSenha) {
       setError('As senhas não coincidem');
       return;
     }
 
+    // Validate email format
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(formData.email)) {
       setError('Email inválido');
       return;
     }
 
+    // Adicionados console.log para ver o formData ANTES do envio
+    console.log("Estado completo do formData ANTES do envio:", formData);
+    console.log("Valor de formData.confirmacaoSenha ANTES do envio:", formData.confirmacaoSenha);
+
     try {
-      
+      // Make API call to register the user
       const response = await api.post('/usuarios', {
         nome: formData.nome,
         email: formData.email,
         senha: formData.senha,
-        confirmacaoSenha: formData.confirmacaoSenha, 
+        confirmacaoSenha: formData.confirmacaoSenha, // Este campo é crucial
+        tipo: 'CLIENTE' // Default user type
       });
 
       setError('');
@@ -54,7 +66,8 @@ const Register = () => {
       setError(error.response?.data?.message || 'Erro ao cadastrar usuário. Por favor, tente novamente.');
     }
   };
-  const navigate = useNavigate()
+
+  const navigate = useNavigate();
 
   return (
     <div className="register-container">
@@ -121,6 +134,6 @@ const Register = () => {
       </div>
     </div>
   );
-}
+};
 
-export default Register
+export default Register;

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { FaTrash, FaShoppingCart } from 'react-icons/fa';
 import api from '../services/api';
-import './Cart.css';
+import '../style/Carrinho.css';
 
 const Cart = () => {
   const [cartItems, setCartItems] = useState([]);

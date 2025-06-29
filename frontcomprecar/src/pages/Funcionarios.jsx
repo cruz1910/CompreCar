@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import api from '../services/api';
-import '../styles/Funcionarios.css';
+import '../style/Funcionario.css';
 import { Navigate } from 'react-router-dom';
 
 const Funcionarios = () => {

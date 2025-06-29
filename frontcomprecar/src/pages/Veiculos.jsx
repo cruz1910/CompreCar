@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import api from '../services/api'; // Seu axios instance
-import '../styles/Veiculos.css';
+import '../style/Veiculos.css';
 import axios from 'axios'; // Para o upload de imagem, pode ser o axios direto
 
 const Veiculos = () => {
