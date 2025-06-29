@@ -1,15 +1,53 @@
 import React, { useEffect, useState } from 'react';
 import { FaTrash, FaShoppingCart } from 'react-icons/fa';
-import '../style/Carrinho.css';
+import api from '../services/api';
+import './Cart.css';
 
 const Cart = () => {
   const [cartItems, setCartItems] = useState([]);
   const [total, setTotal] = useState(0);
 
   useEffect(() => {
-    const storedCart = JSON.parse(localStorage.getItem('carrinho')) || [];
-    setCartItems(storedCart);
-    calculateTotal(storedCart);
+    const user = JSON.parse(localStorage.getItem('user'));
+    if (!user || !user.id) {
+      setCartItems([]);
+      setTotal(0);
+      return;
+    }
+
+    const carrinhoKey = `cart_${user.id}`;
+    const storedCart = JSON.parse(localStorage.getItem(carrinhoKey)) || [];
+
+    if (storedCart.length === 0) {
+      setCartItems([]);
+      setTotal(0);
+      return;
+    }
+
+    // Buscar todos os veículos para verificar quais ainda estão disponíveis
+    api.get('/veiculos')
+      .then(response => {
+        const veiculosAtuais = response.data;
+        const idsDisponiveis = veiculosAtuais
+          .filter(v => v.disponivel === true)
+          .map(v => v.id);
+
+        const carrinhoAtualizado = storedCart.filter(item => idsDisponiveis.includes(item.id));
+
+        if (carrinhoAtualizado.length !== storedCart.length) {
+          alert('Alguns veículos do seu carrinho foram comprados por outros clientes e foram removidos.');
+          localStorage.setItem(carrinhoKey, JSON.stringify(carrinhoAtualizado));
+        }
+
+        setCartItems(carrinhoAtualizado);
+        calculateTotal(carrinhoAtualizado);
+      })
+      .catch(error => {
+        console.error('Erro ao buscar veículos:', error);
+        setCartItems(storedCart);
+        calculateTotal(storedCart);
+      });
+
   }, []);
 
   const calculateTotal = (items) => {
@@ -18,9 +56,14 @@ const Cart = () => {
   };
 
   const removeFromCart = (id) => {
+    const user = JSON.parse(localStorage.getItem('user'));
+    if (!user || !user.id) return;
+
+    const carrinhoKey = `cart_${user.id}`;
     const updatedCart = cartItems.filter(item => item.id !== id);
+
     setCartItems(updatedCart);
-    localStorage.setItem('carrinho', JSON.stringify(updatedCart));
+    localStorage.setItem(carrinhoKey, JSON.stringify(updatedCart));
     calculateTotal(updatedCart);
   };
 
@@ -30,8 +73,12 @@ const Cart = () => {
       return;
     }
 
-  
-    const user = JSON.parse(localStorage.getItem('usuario'));
+    const user = JSON.parse(localStorage.getItem('user'));
+    if (!user || !user.id) {
+      alert('Erro: usuário não encontrado ou não autenticado!');
+      return;
+    }
+
     const itens = cartItems.map((item) => ({
       veiculoId: item.id,
       preco: item.preco,
@@ -48,22 +95,17 @@ const Cart = () => {
     };
 
     try {
-      await fetch('http://localhost:8080/api/pedidos', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data),
-      });
-  
-     
-      localStorage.removeItem('carrinho');
+      await api.post('/pedidos', data);
+
+      const carrinhoKey = `cart_${user.id}`;
+      localStorage.removeItem(carrinhoKey);
       setCartItems([]);
       setTotal(0);
-  
+
       window.dispatchEvent(new Event('pedidoFinalizado'));
-  
       alert('Compra finalizada com sucesso!');
     } catch (error) {
-      console.error('Erro ao finalizar pedido:', error);
+      console.error('Erro ao finalizar pedido:', error.response?.data || error.message);
       alert('Erro ao finalizar compra. Tente novamente.');
     }
   };
