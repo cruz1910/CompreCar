@@ -44,6 +44,7 @@ public class UsuarioController {
 
     @PutMapping("/funcionarios/{id}")
     public UsuarioDTO atualizarFuncionario(@PathVariable Long id, @RequestBody UsuarioDTO dto) {
+        // Verifica se o email já existe para outro usuário
         if (dto.getEmail() != null) {
             UsuarioDTO existing = usuarioService.buscarPorEmail(dto.getEmail());
             if (existing != null && !existing.getId().equals(id)) {

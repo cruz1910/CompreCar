@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import "../style/Registro.css"
 
 
-const Registro = () => {
+const Register = () => {
   const [formData, setformData] = useState({
     nome: '',
     email: '',
@@ -123,4 +123,4 @@ const Registro = () => {
   );
 }
 
-export default Registro
+export default Register

@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+// Testado no postman
 @RestController
 @RequestMapping("/auth")
 public class AutenticacaoController {
@@ -22,6 +23,7 @@ public class AutenticacaoController {
         try {
             Usuario usuario = autenticacaoService.autenticar(loginRequest);
             UsuarioDTO dto = new UsuarioDTO(
+                usuario.getId(),
                 usuario.getNome(),
                 usuario.getEmail(),
                 "", "", // senha omitida
@@ -33,3 +35,4 @@ public class AutenticacaoController {
         }
     }
 }
+

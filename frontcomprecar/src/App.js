@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 
 import Login from "./pages/Login.jsx";
-import Dashboard from "./pages/DashBoard.jsx";
 import Veiculos from "./pages/Veiculos.jsx";
 import Funcionarios from "./pages/Funcionarios.jsx";
 import Cart from "./pages/Cart.jsx";
@@ -17,6 +16,7 @@ import { testConnection } from "./services/testApi";
 import "./styles/ConnectionError.css";
 import PrivateRouteAdminFuncionario from "./routes/PrivateRouteAdminFuncionario.jsx";
 import PedidosCliente from "./pages/PedidosClientes.jsx";
+import Dashboard from "./pages/Dashboard.jsx";
 
 function App() {
   const [isConnected, setIsConnected] = useState(false);
