@@ -51,7 +51,7 @@ const NavbarSwitcher = () => {
               <>
 
                 <Link to="/carrinho" className="cart-icon">
-                  <FaShoppingCart size={18} />
+                  <FaShoppingCart size={23} />
                 </Link>
               </>
             )}

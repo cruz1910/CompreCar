@@ -31,6 +31,7 @@
     padding: 6px 12px;
     cursor: pointer;
   }
+  
   .logout-btn{
     padding: 8px 12px;
     color: white;
@@ -47,7 +48,11 @@
     opacity: 0.8;
     color: #2563eb ;
   }
-  
+  .cart-icon:hover{
+    opacity: 0.8;
+    color: #2563eb ;
+  }
+ 
   .navbar button:hover {
     background-color: #dc2626;
   }
@@ -73,6 +78,8 @@
     font-size: 1.5rem;
     font-weight: bold;
   }
+
+  
   
   
   

@@ -2,6 +2,7 @@ package com.comprecar.service;
 
 import com.comprecar.dto.VeiculoDTO;
 import com.comprecar.exception.PedidoException;
+import com.comprecar.mapper.VeiculoMapper;
 import com.comprecar.model.Veiculo;
 import com.comprecar.repository.VeiculoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,9 @@ import java.util.stream.Collectors;
 
 @Service
 public class VeiculoService {
+
+    @Autowired
+    private VeiculoMapper veiculoMapper;
 
     @Autowired
     private VeiculoRepository veiculoRepository;
@@ -53,16 +57,26 @@ public class VeiculoService {
 
     @Transactional
     public VeiculoDTO atualizarVeiculo(Long id, VeiculoDTO dto) {
-        Veiculo veículoExistente = veiculoRepository.findById(id)
-                .orElseThrow(() -> new PedidoException("Veículo não encontrado com ID: " + id));
+        Veiculo veiculoExistente = veiculoRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Veículo não encontrado com ID: " + id));
 
-        veículoExistente.setMarca(dto.getMarca());
-        veículoExistente.setModelo(dto.getModelo());
-        veículoExistente.setAno(dto.getAno());
-        veículoExistente.setPreco(dto.getPreco());
+        // Atualiza os campos
+        veiculoExistente.setModelo(dto.getModelo());
+        veiculoExistente.setMarca(dto.getMarca());
+        veiculoExistente.setAno(dto.getAno());
+        veiculoExistente.setCor(dto.getCor());
+        veiculoExistente.setDescricao(dto.getDescricao());
+        veiculoExistente.setPreco(dto.getPreco());
+        veiculoExistente.setImagem(dto.getImagem());
 
-        Veiculo salvo = veiculoRepository.save(veículoExistente);
-        return converterParaDto(salvo);
+        // Preserva o valor de "disponivel" se não for enviado no DTO
+        if (dto.getDisponivel() != null) {
+            veiculoExistente.setDisponivel(dto.getDisponivel());
+        }
+
+        Veiculo veiculoAtualizado = veiculoRepository.save(veiculoExistente);
+
+        return veiculoMapper.toVeiculoDTO(veiculoAtualizado);
     }
 
     @Transactional(readOnly = true)

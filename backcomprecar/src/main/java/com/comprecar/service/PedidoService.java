@@ -1,7 +1,4 @@
 package com.comprecar.service;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.comprecar.enums.StatusPedido;
 import com.comprecar.exception.PedidoException;
@@ -11,6 +8,9 @@ import com.comprecar.model.Veiculo;
 import com.comprecar.repository.ItemPedidoRepository;
 import com.comprecar.repository.PedidoRepository;
 import com.comprecar.repository.VeiculoRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -56,8 +56,7 @@ public class PedidoService {
                     throw new PedidoException("Veículo não informado em item do pedido");
                 }
                 Veiculo veiculo = veiculoRepository.findById(item.getVeiculo().getId())
-                        .orElseThrow(() -> new PedidoException(
-                                "Veículo não encontrado com ID: " + item.getVeiculo().getId()));
+                        .orElseThrow(() -> new PedidoException("Veículo não encontrado com ID: " + item.getVeiculo().getId()));
 
                 item.setVeiculo(veiculo);
                 item.setPedido(pedidoSalvo);
@@ -68,39 +67,37 @@ public class PedidoService {
     }
 
     @Transactional
-public Pedido atualizarStatusPedido(Long id, StatusPedido novoStatus) {
-    Pedido pedidoExistente = pedidoRepository.findById(id)
-            .orElseThrow(() -> new PedidoException("Pedido não encontrado com ID: " + id));
+    public Pedido atualizarStatusPedido(Long id, StatusPedido novoStatus) {
+        Pedido pedidoExistente = pedidoRepository.buscarComItens(id)
+                .orElseThrow(() -> new PedidoException("Pedido não encontrado com ID: " + id));
 
-    pedidoExistente.setStatus(novoStatus.name());
-    Pedido pedidoAtualizado = pedidoRepository.save(pedidoExistente);
+        pedidoExistente.setStatus(novoStatus.name());
+        Pedido pedidoAtualizado = pedidoRepository.save(pedidoExistente);
 
-    // Se o pedido foi cancelado, libera os veículos
-    if (novoStatus == StatusPedido.CANCELADO) {
-        atualizarDisponibilidadeVeiculos(pedidoAtualizado, true);
-    }
+        if (novoStatus == StatusPedido.CANCELADO) {
+            atualizarDisponibilidadeVeiculos(pedidoAtualizado, true);
+        }
 
-    if (novoStatus == StatusPedido.FINALIZADO) {
-        // Seu código para finalizar pedido (excluir itens e veículos) permanece aqui
-        List<ItemPedido> itens = List.copyOf(pedidoAtualizado.getItens());
-        pedidoAtualizado.getItens().clear();
-        pedidoRepository.save(pedidoAtualizado);
-        itemPedidoRepository.deleteAll(itens);
+        if (novoStatus == StatusPedido.FINALIZADO) {
+            List<ItemPedido> itens = List.copyOf(pedidoAtualizado.getItens());
+            pedidoAtualizado.getItens().clear();
+            pedidoRepository.save(pedidoAtualizado);
+            itemPedidoRepository.deleteAll(itens);
 
-        for (ItemPedido item : itens) {
-            Veiculo veiculo = item.getVeiculo();
-            if (veiculo != null && !veiculoRelacionadoAOutrosPedidos(veiculo, pedidoAtualizado)) {
-                veiculoRepository.delete(veiculo);
+            for (ItemPedido item : itens) {
+                Veiculo veiculo = item.getVeiculo();
+                if (veiculo != null && !veiculoRelacionadoAOutrosPedidos(veiculo, pedidoAtualizado)) {
+                    veiculoRepository.delete(veiculo);
+                }
             }
         }
-    }
 
-    return pedidoAtualizado;
-}
+        return pedidoAtualizado;
+    }
 
     @Transactional
     public void deletarPedido(Long id) {
-        Pedido pedido = pedidoRepository.findById(id)
+        Pedido pedido = pedidoRepository.buscarComItens(id)
                 .orElseThrow(() -> new PedidoException("Pedido não encontrado com ID: " + id));
 
         atualizarDisponibilidadeVeiculos(pedido, true);
@@ -117,7 +114,6 @@ public Pedido atualizarStatusPedido(Long id, StatusPedido novoStatus) {
 
     @Transactional(readOnly = true)
     public List<Pedido> listarPedidos() {
-        // Retorna todos os pedidos independente do status
         return pedidoRepository.findAll();
     }
 
@@ -126,7 +122,7 @@ public Pedido atualizarStatusPedido(Long id, StatusPedido novoStatus) {
         return pedidoRepository.findByClienteId(clienteId);
     }
 
-    // Métodos privados
+    // Métodos auxiliares
 
     private void validarPedido(Pedido pedido) {
         if (pedido.getCliente() == null) {
@@ -145,8 +141,7 @@ public Pedido atualizarStatusPedido(Long id, StatusPedido novoStatus) {
             }
 
             Veiculo veiculo = veiculoRepository.findById(item.getVeiculo().getId())
-                    .orElseThrow(
-                            () -> new PedidoException("Veículo não encontrado com ID: " + item.getVeiculo().getId()));
+                    .orElseThrow(() -> new PedidoException("Veículo não encontrado com ID: " + item.getVeiculo().getId()));
 
             if (!Boolean.TRUE.equals(veiculo.getDisponivel())) {
                 throw new PedidoException("Veículo com ID " + veiculo.getId() + " não está disponível");
@@ -178,7 +173,7 @@ public Pedido atualizarStatusPedido(Long id, StatusPedido novoStatus) {
         List<ItemPedido> itens = itemPedidoRepository.findByVeiculoId(veiculo.getId());
         for (ItemPedido item : itens) {
             if (!item.getPedido().getId().equals(pedidoAtual.getId())) {
-                return true; // Veículo está em outro pedido diferente
+                return true;
             }
         }
         return false;
