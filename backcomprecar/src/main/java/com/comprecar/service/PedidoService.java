@@ -47,7 +47,7 @@ public class PedidoService {
 
         pedido.setCliente(pedidoExistente.getCliente());
 
-        pedido.setItens(null);
+        pedido.setItens(null); // Limpa itens para evitar conflito
         Pedido pedidoSalvo = pedidoRepository.save(pedido);
 
         if (pedido.getItens() != null) {
@@ -68,7 +68,7 @@ public class PedidoService {
 
     @Transactional
     public Pedido atualizarStatusPedido(Long id, StatusPedido novoStatus) {
-        Pedido pedidoExistente = pedidoRepository.buscarComItens(id)
+        Pedido pedidoExistente = pedidoRepository.findById(id)
                 .orElseThrow(() -> new PedidoException("Pedido não encontrado com ID: " + id));
 
         pedidoExistente.setStatus(novoStatus.name());
@@ -76,6 +76,9 @@ public class PedidoService {
 
         if (novoStatus == StatusPedido.CANCELADO) {
             atualizarDisponibilidadeVeiculos(pedidoAtualizado, true);
+            // Limpar itens no pedido CANCELADO
+            pedidoAtualizado.getItens().clear();
+            pedidoRepository.save(pedidoAtualizado);
         }
 
         if (novoStatus == StatusPedido.FINALIZADO) {
@@ -97,7 +100,7 @@ public class PedidoService {
 
     @Transactional
     public void deletarPedido(Long id) {
-        Pedido pedido = pedidoRepository.buscarComItens(id)
+        Pedido pedido = pedidoRepository.findById(id)
                 .orElseThrow(() -> new PedidoException("Pedido não encontrado com ID: " + id));
 
         atualizarDisponibilidadeVeiculos(pedido, true);
