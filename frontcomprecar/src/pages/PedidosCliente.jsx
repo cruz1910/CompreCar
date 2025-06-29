@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import api from "../services/api";
 import '../style/Pedidos.css';
+import '../style/global.css';
 
 const PedidosCliente = () => {
   const [pedidos, setPedidos] = useState([]);

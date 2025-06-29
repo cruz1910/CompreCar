@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import api from '../services/api';
 import '../style/PagInicial.css';
-
+import '../style/global.css';
 
 const PagInicial = () => {
     const user = JSON.parse(localStorage.getItem('user'));
