@@ -9,7 +9,7 @@ const NavbarSwitcher = () => {
 
   const logout = () => {
     localStorage.removeItem('user');
-    navigate('/');
+    navigate('/login');
   };
 
   return (
