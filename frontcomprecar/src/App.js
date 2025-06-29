@@ -1,21 +1,22 @@
-// App.js
 import React, { useEffect, useState } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
-import { testConnection } from './services/TesteApi';
 
-import NavbarSwitcher from "./components/NavbarSwitcher";
-import Register from "./pages/Register";
-import Veiculos from "./pages/Veiculos";
-import Funcionarios from "./pages/Funcionarios";
-import Cart from "./pages/Cart";
-import ListaPedidos from "./pages/ListaPedidos";
-import PedidosClientes from "./pages/PedidosCliente"
-import PagInicial from "./pages/PagInicial"
-import Login from "./pages/login";
-import PrivateRoute from "./routes/PrivateRoute"
-import PrivateRouteAdmin from "./routes/PrivateRouteAdmin"
-import PrivateRouteAdminFuncionario from "./routes/PrivateRouteAdminFuncionario"
+import Login from "./pages/login.jsx";
+import PagInicial from "./pages/PagInicial.jsx";
+import Veiculos from "./pages/Veiculos.jsx";
+import Funcionarios from "./pages/Funcionarios.jsx";
+import Cart from "./pages/Cart.jsx";
+import Register from "./pages/Register.jsx";
+import ListaPedidos from "./pages/ListaPedidos.jsx";
 
+import NavbarSwitcher from "./components/NavbarSwitcher.jsx";
+import PrivateRoute from "./routes/PrivateRoute.jsx";
+import PrivateRouteAdmin from "./routes/PrivateRouteAdmin.jsx";
+
+import { testConnection } from "./services/TesteApi";
+import "./style/ConnectionError.css";
+import PrivateRouteAdminFuncionario from "./routes/PrivateRouteAdminFuncionario.jsx";
+import PedidosCliente from "./pages/PedidosCliente.jsx";
 
 function App() {
   const [isConnected, setIsConnected] = useState(false);
@@ -68,11 +69,12 @@ function App() {
         />
         <Route path="/login" element={<Login />} />
         <Route path="/cadastro" element={<Register />} />
+
         <Route
           path="/painel"
           element={
             <PrivateRoute>
-             <PagInicial />
+              <PagInicial />
             </PrivateRoute>
           }
         />
@@ -112,10 +114,11 @@ function App() {
           path="/meus-pedidos"
           element={
             <PrivateRoute>
-              <PedidosClientes />
+              <PedidosCliente />
             </PrivateRoute>
           }
         />
+
       </Routes>
     </>
   );

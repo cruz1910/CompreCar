@@ -15,17 +15,31 @@
   margin-bottom: 8px;
 }
 
-.carrinho button {
-  margin-left: 10px;
+.btn-acoes {
+  padding: 8px 12px;
   background-color: #2563eb;
   color: white;
   border: none;
-  padding: 4px 8px;
   cursor: pointer;
+  border-radius: 6px;
+
 }
 
-.carrinho button:hover {
+.btn-acoes:hover {
   background-color: #1d4ed8;
+}
+
+.cancelar {
+  padding: 8px 12px;
+  background-color: #2563eb;
+  color: white;
+  border: none;
+  cursor: pointer;
+  border-radius: 6px;
+}
+
+.cancelar:hover {
+  background-color:#dc2626;
 }
 
 table {

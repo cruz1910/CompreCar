@@ -52,7 +52,8 @@
 }
 
 .finalizar-btn {
-  background-color: #1e2a38;  
+  background-color: #1e2a38;  /* Cor da navbar */
+  color: white;
   border: none;
   padding: 10px 20px;
   border-radius: 5px;
