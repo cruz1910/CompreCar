@@ -126,18 +126,19 @@ const Cart = () => {
       <div className="cart-items">
         {cartItems.map((item) => (
           <div key={item.id} className="cart-item">
-            <div className="item-details">
+            <div className="cart-item-content">
               <div className="item-image">
                 <img src={item.imagem} alt={item.modelo} />
               </div>
               <div className="item-info">
-                <h3>{item.modelo}</h3>
-                <p>Cor: {item.cor}</p>
-                <p>Marca: {item.marca}</p>
-                <p>Ano: {item.ano}</p>
-                <p>Descrição: {item.descricao}</p>
-                <p>Preço: R$ {item.preco.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
-                
+                <div className="info-content">
+                  <h3>{item.modelo}</h3>
+                  <p>Cor: {item.cor}</p>
+                  <p>Marca: {item.marca}</p>
+                  <p>Ano: {item.ano}</p>
+                  <p>Descrição: {item.descricao}</p>
+                  <p>Preço: R$ {item.preco.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
+                </div>
               </div>
             </div>
             <button onClick={() => removeFromCart(item.id)} className="remove-btn">

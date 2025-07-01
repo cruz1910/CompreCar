@@ -17,6 +17,11 @@ const Veiculos = () => {
   const [imagem, setImagem] = useState(''); // Armazenará a URL da imagem
   const [imageFile, setImageFile] = useState(null); // Armazenará o objeto File para upload
   const [editId, setEditId] = useState(null);
+  const [marcaError, setMarcaError] = useState('');
+  const [modeloError, setModeloError] = useState('');
+  const [anoError, setAnoError] = useState('');
+  const [corError, setCorError] = useState('');
+  const [precoError, setPrecoError] = useState('');
 
   const listarVeiculos = async () => {
     try {
@@ -221,12 +226,11 @@ const Veiculos = () => {
               <label>Ano *</label>
               <input
                 type="number"
-                value={editId ? ano : nextYear}
+                value={ano}
                 onChange={(e) => setAno(e.target.value)}
                 required
                 min="1900"
                 max={nextYear}
-                readOnly={editId === null}
               />
             </div>
           </div>
@@ -244,21 +248,18 @@ const Veiculos = () => {
             step="0.01"
           />
         </div>
-
-
-        <div className="form-group">
-          <div className="field-item">
-            <label>Descrição</label>
-            <textarea
-              placeholder="Descrição"
-              value={descricao}
-              onChange={(e) => setDescricao(e.target.value)}
-              maxLength="1000"
-              rows="3"
-            ></textarea>
-          </div>
-        </div>
         
+        <div className="form-group">
+          <label>Descrição</label>
+          <textarea
+            placeholder="Descrição"
+            value={descricao}
+            onChange={(e) => setDescricao(e.target.value)}
+            maxLength="1000"
+            rows="3"
+          ></textarea>
+        </div>
+
         <div className="form-group">
           <label>Imagem</label>
           <div className="image-upload-container">
