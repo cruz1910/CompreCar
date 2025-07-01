@@ -39,8 +39,68 @@
 }
 
 .veiculo-form textarea {
-  height: 100px;
+  height: 150px;
   resize: vertical;
+  min-height: 100px;
+  max-height: 250px;
+  padding: 12px;
+  font-size: 15px;
+  line-height: 1.5;
+  transition: all 0.2s ease;
+}
+
+.descricao-container {
+  position: relative;
+}
+
+.descricao-textarea {
+  width: 100%;
+  border: 2px solid #e0e0e0;
+  border-radius: 6px;
+  background-color: #f8f9fa;
+  color: #333;
+  resize: vertical;
+  min-height: 100px;
+  max-height: 200px;
+  word-break: break-all;
+  line-height: 1.4;
+  letter-spacing: normal;
+  font-size: 14px;
+  padding: 12px;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  hyphens: auto;
+  box-sizing: border-box;
+  margin: 0;
+  display: block;
+}
+
+.descricao-textarea:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+}
+
+.char-counter {
+  position: absolute;
+  bottom: 8px;
+  right: 12px;
+  color: #666;
+  font-size: 12px;
+  background: #f8f9fa;
+  padding: 2px 8px;
+  border-radius: 4px;
+  z-index: 1;
+}
+
+/* Style para quando o limite é atingido */
+.descricao-textarea:invalid {
+  border-color: #dc3545;
+}
+
+.descricao-textarea:invalid + .char-counter {
+  color: #dc3545;
 }
 
 .image-upload-container {

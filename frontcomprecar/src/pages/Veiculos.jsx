@@ -226,6 +226,7 @@ const Veiculos = () => {
               <label>Ano *</label>
               <input
                 type="number"
+                placeholder="Ano"
                 value={ano}
                 onChange={(e) => setAno(e.target.value)}
                 required
@@ -251,13 +252,17 @@ const Veiculos = () => {
         
         <div className="form-group">
           <label>Descrição</label>
-          <textarea
-            placeholder="Descrição"
-            value={descricao}
-            onChange={(e) => setDescricao(e.target.value)}
-            maxLength="1000"
-            rows="3"
-          ></textarea>
+          <div className="descricao-container">
+            <textarea
+              placeholder="Descrição"
+              value={descricao}
+              onChange={(e) => setDescricao(e.target.value)}
+              maxLength="100"
+              rows="5"
+              className="descricao-textarea"
+            ></textarea>
+            <div className="char-counter">{descricao.length}/100</div>
+          </div>
         </div>
 
         <div className="form-group">
