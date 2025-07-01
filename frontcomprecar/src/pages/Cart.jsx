@@ -127,10 +127,18 @@ const Cart = () => {
         {cartItems.map((item) => (
           <div key={item.id} className="cart-item">
             <div className="item-details">
-              <h3>{item.modelo}</h3>
-              <p>Marca: {item.marca}</p>
-              <p>Ano: {item.ano}</p>
-              <p>Preço: R$ {item.preco.toFixed(2)}</p>
+              <div className="item-image">
+                <img src={item.imagem} alt={item.modelo} />
+              </div>
+              <div className="item-info">
+                <h3>{item.modelo}</h3>
+                <p>Cor: {item.cor}</p>
+                <p>Marca: {item.marca}</p>
+                <p>Ano: {item.ano}</p>
+                <p>Descrição: {item.descricao}</p>
+                <p>Preço: R$ {item.preco.toFixed(2)}</p>
+                
+              </div>
             </div>
             <button onClick={() => removeFromCart(item.id)} className="remove-btn">
               <FaTrash /> Remover

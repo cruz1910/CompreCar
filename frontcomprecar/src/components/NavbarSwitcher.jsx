@@ -3,6 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { FaShoppingCart } from 'react-icons/fa';
 import './NavbarSwitcher.css';
 
+
 const NavbarSwitcher = () => {
   const user = JSON.parse(localStorage.getItem('user'));
   const navigate = useNavigate();
