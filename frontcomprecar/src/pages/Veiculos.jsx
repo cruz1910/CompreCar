@@ -8,6 +8,8 @@ const Veiculos = () => {
   const [modelo, setModelo] = useState('');
   const [marca, setMarca] = useState('');
   const [ano, setAno] = useState('');
+  const currentYear = new Date().getFullYear();
+  const nextYear = currentYear + 1;
   const [cor, setCor] = useState('');
   const [descricao, setDescricao] = useState('');
   const [preco, setPreco] = useState('');
@@ -62,6 +64,47 @@ const Veiculos = () => {
         });
         imageUrl = uploadResponse.data;
         console.log("DEBUG (Frontend): Imagem enviada para:", imageUrl);
+      }
+
+      const validateForm = () => {
+        let isValid = true;
+
+        if (!marca) {
+          setMarcaError('Marca é obrigatória');
+          isValid = false;
+        }
+
+        if (!modelo) {
+          setModeloError('Modelo é obrigatório');
+          isValid = false;
+        }
+
+        if (!ano) {
+          setAnoError('Ano é obrigatório');
+          isValid = false;
+        } else if (parseInt(ano) < 1900 || parseInt(ano) > nextYear) {
+          setAnoError(`O ano deve estar entre 1900 e ${nextYear}`);
+          isValid = false;
+        }
+
+        if (!cor) {
+          setCorError('Cor é obrigatória');
+          isValid = false;
+        }
+
+        if (!preco) {
+          setPrecoError('Preço é obrigatório');
+          isValid = false;
+        } else if (parseFloat(preco) <= 0) {
+          setPrecoError('O preço deve ser maior que zero');
+          isValid = false;
+        }
+
+        return isValid;
+      };
+
+      if (!validateForm()) {
+        return;
       }
 
       const veiculoData = {
@@ -178,12 +221,12 @@ const Veiculos = () => {
               <label>Ano *</label>
               <input
                 type="number"
-                placeholder="Ano"
-                value={ano}
+                value={editId ? ano : nextYear}
                 onChange={(e) => setAno(e.target.value)}
                 required
                 min="1900"
-                max="2099"
+                max={nextYear}
+                readOnly={editId === null}
               />
             </div>
           </div>

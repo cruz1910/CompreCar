@@ -2,8 +2,9 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import api from '../services/api';
-import '../style/Login.css';
 import '../style/global.css';
+import '../style/Login.css';
+
 
 const Login = () => {
   const navigate = useNavigate();

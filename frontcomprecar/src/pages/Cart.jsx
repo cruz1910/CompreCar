@@ -136,7 +136,7 @@ const Cart = () => {
                 <p>Marca: {item.marca}</p>
                 <p>Ano: {item.ano}</p>
                 <p>Descrição: {item.descricao}</p>
-                <p>Preço: R$ {item.preco.toFixed(2)}</p>
+                <p>Preço: R$ {item.preco.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
                 
               </div>
             </div>
@@ -148,7 +148,7 @@ const Cart = () => {
       </div>
 
       <div className="cart-summary">
-        <h3>Total: R$ {total.toFixed(2)}</h3>
+        <h3>Total: R$ {total.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</h3>
         <button onClick={finalizarCompra} className="finalizar-btn">
           <FaShoppingCart /> Finalizar Compra
         </button>
