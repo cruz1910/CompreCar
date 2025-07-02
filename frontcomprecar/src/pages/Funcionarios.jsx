@@ -4,6 +4,8 @@ import '../style/Funcionario.css';
 import SearchBar from '../components/SearchBar';
 import '../style/SearchBar.css';
 import { Navigate } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSearch } from '@fortawesome/free-solid-svg-icons';
 
 const Funcionarios = () => {
   const [funcionarios, setFuncionarios] = useState([]);
@@ -243,19 +245,17 @@ const Funcionarios = () => {
       </form>
 
       <h2>Funcionários</h2>
-      <div className="search-toggle-container">
+      <div className="search-container">
         <button 
           onClick={() => setShowSearch(!showSearch)}
           className="search-toggle-btn"
         >
-          {showSearch ? 'Ocultar Pesquisa' : 'Pesquisar'}
+          <FontAwesomeIcon icon={faSearch} size="lg" />
         </button>
-      </div>
-      {showSearch && (
-        <div className="search-container">
+        {showSearch && (
           <SearchBar onSearch={handleSearch} placeholder="Pesquisar por nome, email ou tipo..." />
-        </div>
-      )}
+        )}
+      </div>
 
       <table>
         <thead>

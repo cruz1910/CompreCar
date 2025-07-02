@@ -4,6 +4,8 @@ import '../style/Veiculos.css';
 import SearchBar from '../components/SearchBar';
 import '../style/SearchBar.css';
 import axios from 'axios'; // Para o upload de imagem, pode ser o axios direto
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSearch } from '@fortawesome/free-solid-svg-icons';
 
 const Veiculos = () => {
   const [veiculos, setVeiculos] = useState([]);
@@ -324,19 +326,17 @@ const Veiculos = () => {
       </form>
 
       <h2>Veículos Cadastrados</h2>
-      <div className="search-toggle-container">
+      <div className="search-container">
         <button 
           onClick={() => setShowSearch(!showSearch)}
           className="search-toggle-btn"
         >
-          {showSearch ? 'Ocultar Pesquisa' : 'Pesquisar'}
+          <FontAwesomeIcon icon={faSearch} size="lg" />
         </button>
-      </div>
-      {showSearch && (
-        <div className="search-container">
+        {showSearch && (
           <SearchBar onSearch={handleSearch} placeholder="Pesquisar por marca, modelo, cor, ano ou preço..." />
-        </div>
-      )}
+        )}
+      </div>
       <table>
         <thead>
           <tr>
