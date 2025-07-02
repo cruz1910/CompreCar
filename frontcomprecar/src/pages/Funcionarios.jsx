@@ -18,6 +18,32 @@ const Funcionarios = () => {
   const [loading, setLoading] = useState(false);
   const [showSearch, setShowSearch] = useState(true);
 
+  // Search handler function
+  const handleSearchFuncionarios = (searchTerm) => {
+    if (!searchTerm) {
+      setFuncionarios(originalFuncionarios);
+      return;
+    }
+
+    const filteredFuncionarios = originalFuncionarios.filter(funcionario =>
+      funcionario.nome.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      funcionario.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      funcionario.tipo.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+    setFuncionarios(filteredFuncionarios);
+  };
+
+  useEffect(() => {
+    // Listen for search events from navbar
+    const handleSearch = (event) => {
+      const searchTerm = event.detail;
+      handleSearchFuncionarios(searchTerm);
+    };
+
+    window.addEventListener('search-funcionarios', handleSearch);
+    return () => window.removeEventListener('search-funcionarios', handleSearch);
+  }, []);
+
   const [nomeError, setNomeError] = useState('');
   const [emailError, setEmailError] = useState('');
   const [senhaError, setSenhaError] = useState('');
@@ -245,7 +271,7 @@ const Funcionarios = () => {
       </form>
 
       <h2>Funcionários</h2>
-      <div className="search-container">
+      <div className="search-container" style={{ marginTop: '20px' }}>
         <button 
           onClick={() => setShowSearch(!showSearch)}
           className="search-toggle-btn"
@@ -253,12 +279,12 @@ const Funcionarios = () => {
           <FontAwesomeIcon icon={faSearch} size="lg" />
         </button>
         {showSearch && (
-          <SearchBar onSearch={handleSearch} placeholder="Pesquisar por nome, email ou tipo..." />
+          <SearchBar onSearch={(searchTerm) => {
+            handleSearchFuncionarios(searchTerm);
+          }} placeholder="Pesquisar por nome, email ou tipo..." />
         )}
       </div>
-
-      <div className="table-container">
-        <table>
+      <table>
           <thead>
             <tr>
               <th>Nome</th>
@@ -288,7 +314,6 @@ const Funcionarios = () => {
           </tbody>
         </table>
       </div>
-    </div>
   );
 };
 

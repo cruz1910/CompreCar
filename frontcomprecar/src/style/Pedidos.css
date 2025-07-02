@@ -42,11 +42,13 @@
   background-color:#dc2626;
 }
 
+
 table {
   width: 100%;
   background-color: white;
   border-collapse: collapse;
 }
+
 
 th, td {
   border: 1px solid #ddd;

@@ -176,20 +176,7 @@ input[type="file"] {
 }
 
 /* Tabela de veículos */
-.vehicle-table-container {
-  margin-right: 20px;
-  margin-top: 20px;
-  margin-bottom: 20px;
-  margin-left: 20px;
-}
 
-.vehicle-table-container table {
-  width: 100%;
-  background-color: white;
-  border-collapse: collapse;
-  margin-top: 30px;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
 
 th, td {
   border: 1px solid #ddd;

@@ -2,11 +2,41 @@ import React, { useEffect, useState } from "react";
 import api from "../services/api";
 import '../style/Pedidos.css';
 import '../style/global.css';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSearch } from '@fortawesome/free-solid-svg-icons';
+import SearchBar from '../components/SearchBar';
 
 const PedidosCliente = () => {
   const [pedidos, setPedidos] = useState([]);
+  const [originalPedidos, setOriginalPedidos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [erro, setErro] = useState(null);
+  const [showSearch, setShowSearch] = useState(true);
+
+  useEffect(() => {
+    // Listen for search events from navbar
+    const handleSearch = (event) => {
+      const searchTerm = event.detail;
+      handleSearchPedidos(searchTerm);
+    };
+
+    window.addEventListener('search-meus-pedidos', handleSearch);
+    return () => window.removeEventListener('search-meus-pedidos', handleSearch);
+  }, []);
+
+  const handleSearchPedidos = (searchTerm) => {
+    if (!searchTerm) {
+      setPedidos(originalPedidos);
+      return;
+    }
+
+    const filteredPedidos = originalPedidos.filter(pedido =>
+      pedido.id.toString().includes(searchTerm) ||
+      pedido.cliente?.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      pedido.status.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+    setPedidos(filteredPedidos);
+  };
 
   useEffect(() => {
     const buscarPedidos = async () => {
@@ -20,6 +50,7 @@ const PedidosCliente = () => {
 
         const response = await api.get(`/pedidos/cliente/${user.id}`);
         setPedidos(response.data);
+        setOriginalPedidos(response.data);
       } catch (err) {
         console.error("Erro ao buscar pedidos:", err);
         setErro("Erro ao carregar seus pedidos.");
@@ -64,6 +95,19 @@ const PedidosCliente = () => {
   return (
     <div className="container">
       <h1>Meus Pedidos</h1>
+      <div className="search-container" style={{ marginTop: '20px' }}>
+        <button 
+          onClick={() => setShowSearch(!showSearch)}
+          className="search-toggle-btn"
+        >
+          <FontAwesomeIcon icon={faSearch} size="lg" />
+        </button>
+        {showSearch && (
+          <SearchBar onSearch={(searchTerm) => {
+            handleSearchPedidos(searchTerm);
+          }} placeholder="Pesquisar por número do pedido, cliente ou status..." />
+        )}
+      </div>
       {loading ? (
         <p>Carregando...</p>
       ) : erro ? (
@@ -71,7 +115,7 @@ const PedidosCliente = () => {
       ) : pedidos.length === 0 ? (
         <p>Você ainda não realizou pedidos.</p>
       ) : (
-        <table>
+          <table>
           <thead>
             <tr>
               <th>Numero do Pedido</th>

@@ -92,19 +92,6 @@ h1, h2{
   color: white;
 }
 
-.table-container {
-  margin-right: 20px;
-  margin-bottom: 20px;
-  margin-top: 20px;
-  margin-left: 20px;
-}
-
-.table-container table {
-  width: 100%;
-  background-color: rgb(255, 255, 255);
-  border-collapse: collapse;
-}
-
 th,
 td {
   border: 1px solid #ddd;
@@ -114,7 +101,7 @@ td {
 
 th {
   background-color: #1f2937;
-  color: rgb(255, 255, 255)
+  color: rgb(255, 255, 255);
 }
 
 td button {

@@ -29,6 +29,47 @@ const Veiculos = () => {
   const [precoError, setPrecoError] = useState('');
   const [showSearch, setShowSearch] = useState(true);
 
+  // Search handler function
+  const handleSearch = (searchTerm) => {
+    if (!searchTerm) {
+      setVeiculos(originalVeiculos);
+      return;
+    }
+
+    const filteredVeiculos = originalVeiculos.filter(veiculo =>
+      veiculo.marca.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      veiculo.modelo.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      veiculo.cor.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      veiculo.ano.toString().includes(searchTerm) ||
+      veiculo.preco.toString().includes(searchTerm)
+    );
+    setVeiculos(filteredVeiculos);
+  };
+
+  useEffect(() => {
+    // Listen for search events from navbar
+    window.addEventListener('search-veiculos', (event) => {
+      handleSearch(event.detail);
+    });
+    return () => window.removeEventListener('search-veiculos', handleSearch);
+  }, []);
+
+  const handleSearchVeiculos = (searchTerm) => {
+    if (!searchTerm) {
+      setVeiculos(originalVeiculos);
+      return;
+    }
+
+    const filteredVeiculos = originalVeiculos.filter(veiculo =>
+      veiculo.marca.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      veiculo.modelo.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      veiculo.cor.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      veiculo.ano.toString().includes(searchTerm) ||
+      veiculo.preco.toString().includes(searchTerm)
+    );
+    setVeiculos(filteredVeiculos);
+  };
+
   const listarVeiculos = async () => {
     try {
       const response = await api.get('/veiculos');
@@ -38,25 +79,6 @@ const Veiculos = () => {
       console.error('Erro ao listar veículos:', error);
       alert('Erro ao carregar veículos.');
     }
-  };
-
-  const handleSearch = (searchTerm) => {
-    if (!searchTerm) {
-      setVeiculos(originalVeiculos);
-      return;
-    }
-
-    const filtered = originalVeiculos.filter(veiculo => {
-      return (
-        veiculo.modelo.toLowerCase().includes(searchTerm) ||
-        veiculo.marca.toLowerCase().includes(searchTerm) ||
-        veiculo.cor.toLowerCase().includes(searchTerm) ||
-        veiculo.preco.toString().includes(searchTerm) ||
-        veiculo.ano.toString().includes(searchTerm)
-      );
-    });
-
-    setVeiculos(filtered);
   };
 
   useEffect(() => {
@@ -326,7 +348,7 @@ const Veiculos = () => {
       </form>
 
       <h2>Veículos Cadastrados</h2>
-      <div className="search-container">
+      <div className="search-container" style={{ marginTop: '20px' }}>
         <button 
           onClick={() => setShowSearch(!showSearch)}
           className="search-toggle-btn"
@@ -334,11 +356,12 @@ const Veiculos = () => {
           <FontAwesomeIcon icon={faSearch} size="lg" />
         </button>
         {showSearch && (
-          <SearchBar onSearch={handleSearch} placeholder="Pesquisar por marca, modelo, cor, ano ou preço..." />
+          <SearchBar onSearch={(searchTerm) => {
+            handleSearch(searchTerm);
+          }} placeholder="Pesquisar por marca, modelo, cor, ano ou preço..." />
         )}
       </div>
-      <div className="vehicle-table-container">
-        <table>
+      <table>
         <thead>
           <tr>
             <th>Marca</th>
@@ -378,7 +401,7 @@ const Veiculos = () => {
         </tbody>
       </table>
       </div>
-    </div>
+
   );
 };
 

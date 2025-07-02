@@ -2,6 +2,8 @@ import React from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { FaShoppingCart } from 'react-icons/fa';
 import './NavbarSwitcher.css';
+import SearchBar from '../components/SearchBar';
+
 
 
 const NavbarSwitcher = () => {
@@ -18,6 +20,7 @@ const NavbarSwitcher = () => {
       <div className="navbar-left">
         <Link to="/painel" className="navbar-title">CompreCar</Link>
       </div>
+      
       <div className="navbar-right">
         {user && (
           <>

@@ -1,12 +1,17 @@
 import React, { useEffect, useState } from "react";
 import api from '../services/api'; // importa api axios configurada
-import '../style/Pedidos.css'
+import '../style/Pedidos.css';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSearch } from '@fortawesome/free-solid-svg-icons';
+import SearchBar from '../components/SearchBar';
 
 export default function ListaPedidos() {
   const user = JSON.parse(localStorage.getItem("user"));
   const [pedidos, setPedidos] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [originalPedidos, setOriginalPedidos] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [showSearch, setShowSearch] = useState(true);
 
   const fetchPedidos = async () => {
     setLoading(true);
@@ -14,11 +19,37 @@ export default function ListaPedidos() {
     try {
       const res = await api.get('/pedidos');  // usa api axios
       setPedidos(res.data);
+      setOriginalPedidos(res.data);
     } catch (e) {
       setError(e.response?.data?.message || e.message || "Erro ao carregar pedidos");
     } finally {
       setLoading(false);
     }
+  };
+
+  useEffect(() => {
+    // Listen for search events from navbar
+    const handleSearch = (event) => {
+      const searchTerm = event.detail;
+      handleSearchPedidos(searchTerm);
+    };
+
+    window.addEventListener('search-pedidos', handleSearch);
+    return () => window.removeEventListener('search-pedidos', handleSearch);
+  }, []);
+
+  const handleSearchPedidos = (searchTerm) => {
+    if (!searchTerm) {
+      setPedidos(originalPedidos);
+      return;
+    }
+
+    const filteredPedidos = originalPedidos.filter(pedido =>
+      pedido.id.toString().includes(searchTerm) ||
+      pedido.cliente?.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      pedido.status.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+    setPedidos(filteredPedidos);
   };
 
   useEffect(() => {
@@ -71,7 +102,19 @@ export default function ListaPedidos() {
   return (
     <div className="container">
       <h1>Pedidos</h1>
-
+      <div className="search-container" style={{ marginTop: '20px' }}>
+        <button 
+          onClick={() => setShowSearch(!showSearch)}
+          className="search-toggle-btn"
+        >
+          <FontAwesomeIcon icon={faSearch} size="lg" />
+        </button>
+        {showSearch && (
+          <SearchBar onSearch={(searchTerm) => {
+            handleSearchPedidos(searchTerm);
+          }} placeholder="Pesquisar por número do pedido, cliente ou status..." />
+        )}
+      </div>
       {loading && <p>Carregando pedidos...</p>}
       {error && <p style={{ color: "red" }}>{error}</p>}
 

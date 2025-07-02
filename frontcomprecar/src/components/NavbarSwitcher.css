@@ -5,6 +5,17 @@
     background-color: #1f2937;
     padding: 15px 30px;
   }
+
+  .search-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .search-icon {
+    color: #9ca3af;
+    font-size: 1.2rem;
+  }
   
   .welcome-message {
     font-weight: bold;
