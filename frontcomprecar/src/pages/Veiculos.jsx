@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import api from '../services/api'; // Seu axios instance
 import '../style/Veiculos.css';
+import '../style/VeiculosButton.css';
 import SearchBar from '../components/SearchBar';
 import '../style/SearchBar.css';
 import axios from 'axios'; // Para o upload de imagem, pode ser o axios direto
@@ -28,6 +29,7 @@ const Veiculos = () => {
   const [corError, setCorError] = useState('');
   const [precoError, setPrecoError] = useState('');
   const [showSearch, setShowSearch] = useState(true);
+  const [showVeiculos, setShowVeiculos] = useState(true);
 
   // Search handler function
   const handleSearch = (searchTerm) => {
@@ -347,61 +349,73 @@ const Veiculos = () => {
         </button>
       </form>
 
-      <h2>Veículos Cadastrados</h2>
-      <div className="search-container" style={{ marginTop: '20px' }}>
+      <div className="veiculos-section">
         <button 
-          onClick={() => setShowSearch(!showSearch)}
-          className="search-toggle-btn"
+          onClick={() => setShowVeiculos(!showVeiculos)}
+          className="veiculos-toggle-btn"
         >
-          <FontAwesomeIcon icon={faSearch} size="lg" />
+          Veículos Cadastrados
         </button>
-        {showSearch && (
-          <SearchBar onSearch={(searchTerm) => {
-            handleSearch(searchTerm);
-          }} placeholder="Pesquisar por marca, modelo, cor, ano ou preço..." />
+        {showVeiculos && (
+          <div style={{ width: '100%' }}>
+            <h2>Veículos Cadastrados</h2>
+            <div className="search-container" style={{ marginTop: '20px' }}>
+              <button 
+                onClick={() => setShowSearch(!showSearch)}
+                className="search-toggle-btn"
+              >
+                <FontAwesomeIcon icon={faSearch} size="lg" />
+              </button>
+              {showSearch && (
+                <SearchBar 
+                  onSearch={(searchTerm) => handleSearch(searchTerm)} 
+                  placeholder="Pesquisar por marca, modelo, cor, ano ou preço..." 
+                />
+              )}
+            </div>
+            <table style={{ width: '100%' }}>
+              <thead>
+                <tr>
+                  <th>Marca</th>
+                  <th>Modelo</th>
+                  <th>Ano</th>
+                  <th>Cor</th>
+                  <th>Preço</th>
+                  <th>Imagem</th>
+                  <th>Ações</th>
+                </tr>
+              </thead>
+              <tbody>
+                {veiculos.length > 0 ? (
+                  veiculos.map((veiculo) => (
+                    <tr key={veiculo.id}>
+                      <td>{veiculo.marca}</td>
+                      <td>{veiculo.modelo}</td>
+                      <td>{veiculo.ano}</td>
+                      <td>{veiculo.cor}</td>
+                      <td>R$ {veiculo.preco ? veiculo.preco.toFixed(2) : 'N/A'}</td>
+                      <td>
+                        {veiculo.imagem && (
+                          <img src={veiculo.imagem} alt={veiculo.modelo} style={{ width: '50px', height: 'auto' }} />
+                        )}
+                      </td>
+                      <td>
+                        <button onClick={() => handleEdit(veiculo)} className="edit-btn">Editar</button>
+                        <button onClick={() => handleDelete(veiculo.id)} className="delete-btn">Excluir</button>
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan="7">Nenhum veículo cadastrado.</td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
         )}
       </div>
-      <table>
-        <thead>
-          <tr>
-            <th>Marca</th>
-            <th>Modelo</th>
-            <th>Ano</th>
-            <th>Cor</th>
-            <th>Preço</th>
-            <th>Imagem</th>
-            <th>Ações</th>
-          </tr>
-        </thead>
-        <tbody>
-          {veiculos.length > 0 ? (
-            veiculos.map((veiculo) => (
-              <tr key={veiculo.id}>
-                <td>{veiculo.marca}</td>
-                <td>{veiculo.modelo}</td>
-                <td>{veiculo.ano}</td>
-                <td>{veiculo.cor}</td>
-                <td>R$ {veiculo.preco ? veiculo.preco.toFixed(2) : 'N/A'}</td>
-                <td>
-                  {veiculo.imagem && (
-                    <img src={veiculo.imagem} alt={veiculo.modelo} style={{ width: '50px', height: 'auto' }} />
-                  )}
-                </td>
-                <td>
-                  <button onClick={() => handleEdit(veiculo)} className="edit-btn">Editar</button>
-                  <button onClick={() => handleDelete(veiculo.id)} className="delete-btn">Excluir</button>
-                </td>
-              </tr>
-            ))
-          ) : (
-            <tr>
-              <td colSpan="7">Nenhum veículo cadastrado.</td>
-            </tr>
-          )}
-        </tbody>
-      </table>
-      </div>
-
+    </div>
   );
 };
 

@@ -1,0 +1,26 @@
+.veiculos-toggle-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border-radius: 4px;
+  background-color: #2563eb;
+  border: 1px solid #1d4ed8;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  margin-bottom: 20px;
+  width: fit-content;
+  color: white;
+  font-weight: bold;
+}
+
+.veiculos-toggle-btn:hover {
+  background-color: #1d4ed8;
+}
+
+.veiculos-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
