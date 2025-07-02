@@ -271,49 +271,53 @@ const Funcionarios = () => {
       </form>
 
       <h2>Funcionários</h2>
+
       <div className="search-container" style={{ marginTop: '20px' }}>
-        <button 
+        {showSearch && (
+          <SearchBar
+            onSearch={(searchTerm) => handleSearchFuncionarios(searchTerm)}
+            placeholder="Pesquisar por nome, email ou tipo..."
+          />
+        )}
+
+        <button
           onClick={() => setShowSearch(!showSearch)}
           className="search-toggle-btn"
         >
           <FontAwesomeIcon icon={faSearch} size="lg" />
         </button>
-        {showSearch && (
-          <SearchBar onSearch={(searchTerm) => {
-            handleSearchFuncionarios(searchTerm);
-          }} placeholder="Pesquisar por nome, email ou tipo..." />
-        )}
       </div>
+
       <table>
-          <thead>
-            <tr>
-              <th>Nome</th>
-              <th>Email</th>
-              <th>Tipo</th>
-              <th>Ações</th>
-            </tr>
-          </thead>
-          <tbody>
-            {funcionarios.length > 0 ? (
-              funcionarios.map((f) => (
-                <tr key={f.id}>
-                  <td>{f.nome}</td>
-                  <td>{f.email}</td>
-                  <td>{f.tipo}</td>
-                  <td>
-                    <button className="buttonEditar" onClick={() => handleEdit(f)}>Editar</button>
-                    <button className="buttonExcluir" onClick={() => handleDelete(f.id)}>Excluir</button>
-                  </td>
-                </tr>
-              ))
-            ) : (
-              <tr>
-                <td colSpan="4">Nenhum funcionário cadastrado.</td>
+        <thead>
+          <tr>
+            <th>Nome</th>
+            <th>Email</th>
+            <th>Tipo</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+          {funcionarios.length > 0 ? (
+            funcionarios.map((f) => (
+              <tr key={f.id}>
+                <td>{f.nome}</td>
+                <td>{f.email}</td>
+                <td>{f.tipo}</td>
+                <td>
+                  <button className="buttonEditar" onClick={() => handleEdit(f)}>Editar</button>
+                  <button className="buttonExcluir" onClick={() => handleDelete(f.id)}>Excluir</button>
+                </td>
               </tr>
-            )}
-          </tbody>
-        </table>
-      </div>
+            ))
+          ) : (
+            <tr>
+              <td colSpan="4">Nenhum funcionário cadastrado.</td>
+            </tr>
+          )}
+        </tbody>
+      </table>
+    </div>
   );
 };
 

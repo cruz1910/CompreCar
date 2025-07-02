@@ -103,17 +103,17 @@ export default function ListaPedidos() {
     <div className="container">
       <h1>Pedidos</h1>
       <div className="search-container" style={{ marginTop: '20px' }}>
+        {showSearch && (
+          <SearchBar onSearch={(searchTerm) => {
+            handleSearchPedidos(searchTerm);
+          }} placeholder="Pesquisar por número do pedido ou status..." />
+        )}
         <button 
           onClick={() => setShowSearch(!showSearch)}
           className="search-toggle-btn"
         >
           <FontAwesomeIcon icon={faSearch} size="lg" />
         </button>
-        {showSearch && (
-          <SearchBar onSearch={(searchTerm) => {
-            handleSearchPedidos(searchTerm);
-          }} placeholder="Pesquisar por número do pedido, cliente ou status..." />
-        )}
       </div>
       {loading && <p>Carregando pedidos...</p>}
       {error && <p style={{ color: "red" }}>{error}</p>}

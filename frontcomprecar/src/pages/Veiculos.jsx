@@ -360,18 +360,18 @@ const Veiculos = () => {
           <div style={{ width: '100%' }}>
             <h2>Veículos Cadastrados</h2>
             <div className="search-container" style={{ marginTop: '20px' }}>
-              <button 
-                onClick={() => setShowSearch(!showSearch)}
-                className="search-toggle-btn"
-              >
-                <FontAwesomeIcon icon={faSearch} size="lg" />
-              </button>
               {showSearch && (
                 <SearchBar 
                   onSearch={(searchTerm) => handleSearch(searchTerm)} 
                   placeholder="Pesquisar por marca, modelo, cor, ano ou preço..." 
                 />
               )}
+              <button 
+                onClick={() => setShowSearch(!showSearch)}
+                className="search-toggle-btn"
+              >
+                <FontAwesomeIcon icon={faSearch} size="lg" />
+              </button>
             </div>
             <table style={{ width: '100%' }}>
               <thead>

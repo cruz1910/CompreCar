@@ -72,15 +72,15 @@ const PagInicial = () => {
     return (
       <div>
         <div className="search-container" style={{ marginTop: '20px' }}>
+          {showSearch && (
+            <SearchBar onSearch={handleSearch} placeholder="Pesquisar por marca, modelo, cor, ano ou preço..." />
+          )}
           <button
             onClick={() => setShowSearch(!showSearch)}
             className="search-toggle-btn"
           >
             <FontAwesomeIcon icon={faSearch} size="lg" />
           </button>
-          {showSearch && (
-            <SearchBar onSearch={handleSearch} placeholder="Pesquisar por marca, modelo, cor, ano ou preço..." />
-          )}
         </div>
         <div className="dashboard-container">
           <div className="vehicles-section">
