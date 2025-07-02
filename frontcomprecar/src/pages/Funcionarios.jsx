@@ -257,35 +257,37 @@ const Funcionarios = () => {
         )}
       </div>
 
-      <table>
-        <thead>
-          <tr>
-            <th>Nome</th>
-            <th>Email</th>
-            <th>Tipo</th>
-            <th>Ações</th>
-          </tr>
-        </thead>
-        <tbody>
-          {funcionarios.length > 0 ? (
-            funcionarios.map((f) => (
-              <tr key={f.id}>
-                <td>{f.nome}</td>
-                <td>{f.email}</td>
-                <td>{f.tipo}</td>
-                <td>
-                  <button className="buttonEditar" onClick={() => handleEdit(f)}>Editar</button>
-                  <button className="buttonExcluir" onClick={() => handleDelete(f.id)}>Excluir</button>
-                </td>
-              </tr>
-            ))
-          ) : (
+      <div className="table-container">
+        <table>
+          <thead>
             <tr>
-              <td colSpan="4">Nenhum funcionário cadastrado.</td>
+              <th>Nome</th>
+              <th>Email</th>
+              <th>Tipo</th>
+              <th>Ações</th>
             </tr>
-          )}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {funcionarios.length > 0 ? (
+              funcionarios.map((f) => (
+                <tr key={f.id}>
+                  <td>{f.nome}</td>
+                  <td>{f.email}</td>
+                  <td>{f.tipo}</td>
+                  <td>
+                    <button className="buttonEditar" onClick={() => handleEdit(f)}>Editar</button>
+                    <button className="buttonExcluir" onClick={() => handleDelete(f.id)}>Excluir</button>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan="4">Nenhum funcionário cadastrado.</td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 };

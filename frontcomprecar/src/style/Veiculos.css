@@ -176,7 +176,14 @@ input[type="file"] {
 }
 
 /* Tabela de veículos */
-table {
+.vehicle-table-container {
+  margin-right: 20px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  margin-left: 20px;
+}
+
+.vehicle-table-container table {
   width: 100%;
   background-color: white;
   border-collapse: collapse;

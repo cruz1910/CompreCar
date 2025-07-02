@@ -1,4 +1,6 @@
-
+h1, h2{
+  margin-left: 20px;
+}
 .form {
   background-color: white;
   padding: 20px;
@@ -90,9 +92,16 @@
   color: white;
 }
 
-table {
+.table-container {
+  margin-right: 20px;
+  margin-bottom: 20px;
+  margin-top: 20px;
+  margin-left: 20px;
+}
+
+.table-container table {
   width: 100%;
-  background-color: white;
+  background-color: rgb(255, 255, 255);
   border-collapse: collapse;
 }
 
@@ -105,7 +114,7 @@ td {
 
 th {
   background-color: #1f2937;
-  color: white;
+  color: rgb(255, 255, 255)
 }
 
 td button {
@@ -116,4 +125,13 @@ td button {
 
 td button:hover {
   opacity: 0.8;
+}
+
+tr:hover {
+  background-color: #f3f4f6;
+  transition: background-color 0.2s ease;
+}
+
+tr:hover td {
+  border-color: #e5e7eb;
 }

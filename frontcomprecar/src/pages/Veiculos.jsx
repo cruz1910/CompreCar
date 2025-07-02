@@ -337,7 +337,8 @@ const Veiculos = () => {
           <SearchBar onSearch={handleSearch} placeholder="Pesquisar por marca, modelo, cor, ano ou preço..." />
         )}
       </div>
-      <table>
+      <div className="vehicle-table-container">
+        <table>
         <thead>
           <tr>
             <th>Marca</th>
@@ -376,6 +377,7 @@ const Veiculos = () => {
           )}
         </tbody>
       </table>
+      </div>
     </div>
   );
 };
