@@ -1,16 +1,20 @@
 import React, { useEffect, useState } from 'react';
 import api from '../services/api';
 import '../style/Funcionario.css';
+import SearchBar from '../components/SearchBar';
+import '../style/SearchBar.css';
 import { Navigate } from 'react-router-dom';
 
 const Funcionarios = () => {
   const [funcionarios, setFuncionarios] = useState([]);
+  const [originalFuncionarios, setOriginalFuncionarios] = useState([]);
   const [nome, setNome] = useState('');
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
   const [confirmacaoSenha, setConfirmacaoSenha] = useState('');
   const [editId, setEditId] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [showSearch, setShowSearch] = useState(true);
 
   const [nomeError, setNomeError] = useState('');
   const [emailError, setEmailError] = useState('');
@@ -35,6 +39,7 @@ const Funcionarios = () => {
       setLoading(true);
       const response = await api.get('/usuarios/funcionarios');
       setFuncionarios(response.data);
+      setOriginalFuncionarios(response.data);
     } catch (error) {
       console.error('Erro ao listar funcionários:', error);
       alert('Erro ao carregar a lista de funcionários');
@@ -42,6 +47,27 @@ const Funcionarios = () => {
       setLoading(false);
     }
   };
+
+  const handleSearch = (searchTerm) => {
+    if (!searchTerm) {
+      setFuncionarios(originalFuncionarios);
+      return;
+    }
+
+    const filtered = originalFuncionarios.filter(funcionario => {
+      return (
+        funcionario.nome.toLowerCase().includes(searchTerm) ||
+        funcionario.email.toLowerCase().includes(searchTerm) ||
+        funcionario.tipo.toLowerCase().includes(searchTerm)
+      );
+    });
+
+    setFuncionarios(filtered);
+  };
+
+  useEffect(() => {
+    listarFuncionarios();
+  }, []);
 
   const validateForm = () => {
     let isValid = true;
@@ -216,25 +242,48 @@ const Funcionarios = () => {
         </button>
       </form>
 
+      <h2>Funcionários</h2>
+      <div className="search-toggle-container">
+        <button 
+          onClick={() => setShowSearch(!showSearch)}
+          className="search-toggle-btn"
+        >
+          {showSearch ? 'Ocultar Pesquisa' : 'Pesquisar'}
+        </button>
+      </div>
+      {showSearch && (
+        <div className="search-container">
+          <SearchBar onSearch={handleSearch} placeholder="Pesquisar por nome, email ou tipo..." />
+        </div>
+      )}
+
       <table>
         <thead>
           <tr>
             <th>Nome</th>
             <th>Email</th>
+            <th>Tipo</th>
             <th>Ações</th>
           </tr>
         </thead>
         <tbody>
-          {funcionarios.map((f) => (
-            <tr key={f.id}>
-              <td>{f.nome}</td>
-              <td>{f.email}</td>
-              <td>
-                <button className="buttonEditar" onClick={() => handleEdit(f)}>Editar</button>
-                <button className="buttonExcluir" onClick={() => handleDelete(f.id)}>Excluir</button>
-              </td>
+          {funcionarios.length > 0 ? (
+            funcionarios.map((f) => (
+              <tr key={f.id}>
+                <td>{f.nome}</td>
+                <td>{f.email}</td>
+                <td>{f.tipo}</td>
+                <td>
+                  <button className="buttonEditar" onClick={() => handleEdit(f)}>Editar</button>
+                  <button className="buttonExcluir" onClick={() => handleDelete(f.id)}>Excluir</button>
+                </td>
+              </tr>
+            ))
+          ) : (
+            <tr>
+              <td colSpan="4">Nenhum funcionário cadastrado.</td>
             </tr>
-          ))}
+          )}
         </tbody>
       </table>
     </div>

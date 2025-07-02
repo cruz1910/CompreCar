@@ -83,7 +83,6 @@
 
 .cart-summary {
   margin-top: 30px;
-  background-color: #f8f8f8;
   padding: 20px;
   border-radius: 8px;
   text-align: right;
@@ -96,7 +95,7 @@
 
 .finalizar-btn {
   background-color: #1e2a38;  /* Cor da navbar */
-  color: white;
+  color: rgb(255, 255, 255);
   border: none;
   padding: 10px 20px;
   border-radius: 5px;

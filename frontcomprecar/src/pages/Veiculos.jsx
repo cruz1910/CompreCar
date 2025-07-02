@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import api from '../services/api'; // Seu axios instance
 import '../style/Veiculos.css';
+import SearchBar from '../components/SearchBar';
+import '../style/SearchBar.css';
 import axios from 'axios'; // Para o upload de imagem, pode ser o axios direto
 
 const Veiculos = () => {
   const [veiculos, setVeiculos] = useState([]);
+  const [originalVeiculos, setOriginalVeiculos] = useState([]);
   const [modelo, setModelo] = useState('');
   const [marca, setMarca] = useState('');
   const [ano, setAno] = useState('');
@@ -22,15 +25,36 @@ const Veiculos = () => {
   const [anoError, setAnoError] = useState('');
   const [corError, setCorError] = useState('');
   const [precoError, setPrecoError] = useState('');
+  const [showSearch, setShowSearch] = useState(true);
 
   const listarVeiculos = async () => {
     try {
       const response = await api.get('/veiculos');
       setVeiculos(response.data);
+      setOriginalVeiculos(response.data);
     } catch (error) {
       console.error('Erro ao listar veículos:', error);
       alert('Erro ao carregar veículos.');
     }
+  };
+
+  const handleSearch = (searchTerm) => {
+    if (!searchTerm) {
+      setVeiculos(originalVeiculos);
+      return;
+    }
+
+    const filtered = originalVeiculos.filter(veiculo => {
+      return (
+        veiculo.modelo.toLowerCase().includes(searchTerm) ||
+        veiculo.marca.toLowerCase().includes(searchTerm) ||
+        veiculo.cor.toLowerCase().includes(searchTerm) ||
+        veiculo.preco.toString().includes(searchTerm) ||
+        veiculo.ano.toString().includes(searchTerm)
+      );
+    });
+
+    setVeiculos(filtered);
   };
 
   useEffect(() => {
@@ -300,6 +324,19 @@ const Veiculos = () => {
       </form>
 
       <h2>Veículos Cadastrados</h2>
+      <div className="search-toggle-container">
+        <button 
+          onClick={() => setShowSearch(!showSearch)}
+          className="search-toggle-btn"
+        >
+          {showSearch ? 'Ocultar Pesquisa' : 'Pesquisar'}
+        </button>
+      </div>
+      {showSearch && (
+        <div className="search-container">
+          <SearchBar onSearch={handleSearch} placeholder="Pesquisar por marca, modelo, cor, ano ou preço..." />
+        </div>
+      )}
       <table>
         <thead>
           <tr>
