@@ -55,35 +55,41 @@ const Login = () => {
 
 
   return (
-    <div className="login-container">
-      <h2>Login</h2>
-      {error && <p className="error">{error}</p>}
-      <form onSubmit={handleLogin}>
-        <div className="form-group">
-          <input
-            type="email"
-            placeholder="Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-          {emailError && <p className="error">{emailError}</p>}
+    <div className="login-page-split">
+      <div className="login-left-half"></div>
+      <div className="login-right-half">
+        <h1 className="login-title">Bem-vindo de volta!</h1>
+        <div className="login-container">
+          <h2>Login</h2>
+          {error && <p className="error">{error}</p>}
+          <form onSubmit={handleLogin}>
+            <div className="form-group">
+              <input
+                type="email"
+                placeholder="Email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+              />
+              {emailError && <p className="error">{emailError}</p>}
+            </div>
+            <div className="form-group">
+              <input
+                type="password"
+                placeholder="Senha"
+                value={senha}
+                onChange={(e) => setSenha(e.target.value)}
+                required
+              />
+              {senhaError && <p className="error">{senhaError}</p>}
+            </div>
+            <button type="submit" className="login-button">Entrar</button>
+          </form>
+          <p className="register-link">
+            Não tem uma conta? <Link to="/cadastro">Cadastre-se aqui</Link>
+          </p>
         </div>
-        <div className="form-group">
-          <input
-            type="password"
-            placeholder="Senha"
-            value={senha}
-            onChange={(e) => setSenha(e.target.value)}
-            required
-          />
-          {senhaError && <p className="error">{senhaError}</p>}
-        </div>
-        <button type="submit" className="login-button">Entrar</button>
-      </form>
-      <p className="register-link">
-        Não tem uma conta? <Link to="/cadastro">Cadastre-se aqui</Link>
-      </p>
+      </div>
     </div>
   );
 };

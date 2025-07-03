@@ -1,9 +1,50 @@
 
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  overflow-x: hidden;
+}
+
+.login-page-split {
+  display: flex;
+  height: 100vh;
+  width: 100%;
+}
+
+.login-left-half {
+  flex: 2.0;
+  background-color: #ccd8ff;
+}
+
+.login-right-half {
+  flex: 1;
+  background: #ffffff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.login-title {
+  color: #111;
+  text-align: center;
+  margin-bottom: 100px;
+  margin-top: -100px;
+  font-size: 2.2rem;
+  font-weight: bold;
+  width: 100%;
+}
+
 .login-container {
   background-color: white;
   padding: 40px;
   max-width: 400px;
-  margin: 100px auto;
+  width: 100%;
   border-radius: 8px;
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
 }
