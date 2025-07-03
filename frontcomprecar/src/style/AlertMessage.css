@@ -1,0 +1,56 @@
+.alert-message {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 15px 20px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    font-family: Arial, sans-serif;
+    font-size: 16px;
+    color: #fff;
+    z-index: 1000;
+    opacity: 0;
+    transform: translateY(-20px);
+    transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+  }
+  
+  .alert-message.fade-in {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  
+  .alert-message.fade-out {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  
+  /* Estilo para mensagem de sucesso */
+  .alert-success {
+    background-color: #28a745; 
+    border: 1px solid #218838;
+  }
+  
+  /* Estilo para mensagem de erro */
+  .alert-error {
+    background-color: #dc3545;
+    border: 1px solid #c82333;
+  }
+  
+  .close-button {
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 20px;
+    cursor: pointer;
+    margin-left: 15px;
+    padding: 0 5px;
+    line-height: 1;
+    outline: none;
+  }
+  
+  .close-button:hover {
+    opacity: 0.8;
+  }

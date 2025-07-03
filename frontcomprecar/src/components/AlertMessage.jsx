@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import './AlertMessage.css'; // O arquivo CSS para estilização e animações
+import './AlertMessage.css';
 
 const AlertMessage = ({ type, message, onClose }) => {
   const [isVisible, setIsVisible] = useState(false);
