@@ -5,7 +5,7 @@ import api from '../services/api';
 import '../style/global.css';
 import '../style/Login.css';
 import carroImg from '../img/carro.jpg';
-
+import AlertMessage from './AlertMessage'; 
 
 const Login = () => {
   const navigate = useNavigate();
@@ -13,11 +13,14 @@ const Login = () => {
   const [senha, setSenha] = useState('');
   const [emailError, setEmailError] = useState('');
   const [senhaError, setSenhaError] = useState('');
-  const [error, setError] = useState('');
+  
+  
+  const [alertInfo, setAlertInfo] = useState(null); // { type: 'success' | 'error', message: string }
 
   const validateForm = () => {
     let isValid = true;
-    
+    setAlertInfo(null); 
+
     if (!email) {
       setEmailError('Email é obrigatório');
       isValid = false;
@@ -40,23 +43,51 @@ const Login = () => {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    
-    if (!validateForm()) return;
+    setAlertInfo(null); 
+
+    if (!validateForm()) {
+        // Se a validação falhar, da de exibir um alerta de erro geral do formulário
+        setAlertInfo({ type: 'error', message: 'Por favor, preencha todos os campos corretamente.' });
+        return;
+    }
 
     try {
       const response = await api.post('/auth/login', { email, senha });
       localStorage.setItem('user', JSON.stringify(response.data));
-      navigate('/painel');
+      
+      // Exibe um alerta de sucesso antes de navegar, se desejar
+      setAlertInfo({ type: 'success', message: 'Login realizado com sucesso!' });
+      
+      // Navega após um pequeno delay para que o usuário veja a mensagem de sucesso
+      setTimeout(() => {
+        navigate('/painel');
+      }, 1000); 
+      
     } catch (error) {
       console.error('Erro no login:', error.response?.data || error.message);
-      setError(error.response?.data?.message || 'Erro ao fazer login. Por favor, tente novamente.');
+      setAlertInfo({
+        type: 'error',
+        message: error.response?.data?.message || 'Erro ao fazer login. Por favor, tente novamente.'
+      });
     }
   };
 
-
+ 
+  const handleAlertClose = () => {
+    setAlertInfo(null);
+  };
 
   return (
     <div className="login-page-split">
+      {/* O AlertMessage será renderizado aqui, fora do fluxo do formulário para ser fixo */}
+      {alertInfo && (
+        <AlertMessage
+          type={alertInfo.type}
+          message={alertInfo.message}
+          onClose={handleAlertClose}
+        />
+      )}
+
       <div className="login-left-half">
         <img src={carroImg} alt="Carro" className="login-image" />
       </div>
@@ -64,7 +95,8 @@ const Login = () => {
         <h1 className="login-title">Bem-vindo de volta!</h1>
         <div className="login-container">
           <h2>Login</h2>
-          {error && <p className="error">{error}</p>}
+          {/* Remova a linha abaixo, pois o AlertMessage a substituirá para erros gerais */}
+          {/* {error && <p className="error">{error}</p>} */}
           <form onSubmit={handleLogin}>
             <div className="form-group">
               <input
