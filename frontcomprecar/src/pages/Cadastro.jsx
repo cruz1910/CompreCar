@@ -83,6 +83,12 @@ const Cadastro = () => {
   };
 
   return (
+    <div className="login-page-split">
+        <img src={carroImg} alt="Carro" className="login-image" />
+        <div className="login-left-half">
+        </div>
+        <div className="login-right-half">
+          <h1 className="login-title">Bem-vindo de volta!</h1>
     <div className="login-container">
       <h2>Cadastro</h2>
       {error && <p className="error">{error}</p>}
@@ -132,6 +138,8 @@ const Cadastro = () => {
       <p className="register-link">
         Já tem uma conta? <Link to="/login">Faça login aqui</Link>
       </p>
+    </div>
+    </div>
     </div>
   );
 };

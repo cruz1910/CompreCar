@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import api from '../services/api';
 import '../style/global.css';
 import '../style/Login.css';
+import carroImg from '../img/carro.jpg';
 
 
 const Login = () => {
@@ -56,7 +57,9 @@ const Login = () => {
 
   return (
     <div className="login-page-split">
-      <div className="login-left-half"></div>
+      <div className="login-left-half">
+        <img src={carroImg} alt="Carro" className="login-image" />
+      </div>
       <div className="login-right-half">
         <h1 className="login-title">Bem-vindo de volta!</h1>
         <div className="login-container">
