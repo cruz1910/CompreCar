@@ -1,76 +1,47 @@
-import React, { useEffect, useState } from 'react';
-import api from '../services/api'; // Seu axios instance
-import '../style/Veiculos.css';
-import '../style/VeiculosButton.css';
+import React, { useState, useEffect } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSearch, faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
+import api from '../services/api';
 import SearchBar from '../components/SearchBar';
 import '../style/SearchBar.css';
-import axios from 'axios'; // Para o upload de imagem, pode ser o axios direto
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSearch } from '@fortawesome/free-solid-svg-icons';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import '../style/Toastify.css';
+import '../style/Veiculos.css';
+import '../style/global.css';
 
 const Veiculos = () => {
+  const CustomCloseButton = ({ closeToast }) => (
+    <span onClick={closeToast} className="toastify-close-button">
+      ×
+    </span>
+  );
   const [veiculos, setVeiculos] = useState([]);
   const [originalVeiculos, setOriginalVeiculos] = useState([]);
   const [modelo, setModelo] = useState('');
   const [marca, setMarca] = useState('');
   const [ano, setAno] = useState('');
-  const currentYear = new Date().getFullYear();
-  const nextYear = currentYear + 1;
   const [cor, setCor] = useState('');
   const [descricao, setDescricao] = useState('');
   const [preco, setPreco] = useState('');
-  const [dataCadastro, setDataCadastro] = useState(''); 
-  const [imagem, setImagem] = useState(''); // Armazenará a URL da imagem
-  const [imageFile, setImageFile] = useState(null); // Armazenará o objeto File para upload
+  const [imagem, setImagem] = useState('');
+  const [imageFile, setImageFile] = useState(null);
   const [editId, setEditId] = useState(null);
   const [marcaError, setMarcaError] = useState('');
   const [modeloError, setModeloError] = useState('');
   const [anoError, setAnoError] = useState('');
   const [corError, setCorError] = useState('');
   const [precoError, setPrecoError] = useState('');
+  const [descricaoError, setDescricaoError] = useState('');
   const [showSearch, setShowSearch] = useState(true);
-  const [showVeiculos, setShowVeiculos] = useState(true);
+  const [showModal, setShowModal] = useState(false);
 
-  // Search handler function
-  const handleSearch = (searchTerm) => {
-    if (!searchTerm) {
-      setVeiculos(originalVeiculos);
-      return;
-    }
-
-    const filteredVeiculos = originalVeiculos.filter(veiculo =>
-      veiculo.marca.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      veiculo.modelo.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      veiculo.cor.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      veiculo.ano.toString().includes(searchTerm) ||
-      veiculo.preco.toString().includes(searchTerm)
-    );
-    setVeiculos(filteredVeiculos);
-  };
+  const currentYear = new Date().getFullYear();
+  const nextYear = currentYear + 1;
 
   useEffect(() => {
-    // Listen for search events from navbar
-    window.addEventListener('search-veiculos', (event) => {
-      handleSearch(event.detail);
-    });
-    return () => window.removeEventListener('search-veiculos', handleSearch);
+    listarVeiculos();
   }, []);
-
-  const handleSearchVeiculos = (searchTerm) => {
-    if (!searchTerm) {
-      setVeiculos(originalVeiculos);
-      return;
-    }
-
-    const filteredVeiculos = originalVeiculos.filter(veiculo =>
-      veiculo.marca.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      veiculo.modelo.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      veiculo.cor.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      veiculo.ano.toString().includes(searchTerm) ||
-      veiculo.preco.toString().includes(searchTerm)
-    );
-    setVeiculos(filteredVeiculos);
-  };
 
   const listarVeiculos = async () => {
     try {
@@ -78,14 +49,21 @@ const Veiculos = () => {
       setVeiculos(response.data);
       setOriginalVeiculos(response.data);
     } catch (error) {
-      console.error('Erro ao listar veículos:', error);
-      alert('Erro ao carregar veículos.');
+      toast.error('Erro ao listar veículos: ' + error.message);
+      toast.error('Erro ao carregar veículos.');
     }
   };
 
-  useEffect(() => {
-    listarVeiculos();
-  }, []);
+  const handleSearch = (searchTerm) => {
+    if (!searchTerm) return setVeiculos(originalVeiculos);
+
+    const filtered = originalVeiculos.filter((v) =>
+      [v.marca, v.modelo, v.cor, v.ano.toString(), v.preco.toString()].some((field) =>
+        field.toLowerCase().includes(searchTerm.toLowerCase())
+      )
+    );
+    setVeiculos(filtered);
+  };
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
@@ -102,64 +80,66 @@ const Veiculos = () => {
     }
   };
 
+  const validateForm = () => {
+    let isValid = true;
+    if (!marca) {
+      setMarcaError('Marca é obrigatória');
+      isValid = false;
+    } else setMarcaError('');
+
+    if (!modelo) {
+      setModeloError('Modelo é obrigatório');
+      isValid = false;
+    } else setModeloError('');
+
+    if (!ano || parseInt(ano) < 1900 || parseInt(ano) > nextYear) {
+      setAnoError(`Ano inválido (1900-${nextYear})`);
+      isValid = false;
+    } else setAnoError('');
+
+    if (!cor) {
+      setCorError('Cor é obrigatória');
+      isValid = false;
+    } else setCorError('');
+
+    if (!preco) {
+      setPrecoError('Preço é obrigatório');
+      isValid = false;
+    } else {
+      const priceStr = preco.toString();
+      const price = parseFloat(priceStr.replace(',', '.'));
+      if (isNaN(price) || price <= 0) {
+        setPrecoError('Preço deve ser maior que 0 e usar ponto ou vírgula');
+        isValid = false;
+      } else {
+        setPrecoError('');
+      }
+    }
+
+    if (descricao && descricao.length > 100) {
+      setDescricaoError('Descrição deve ter no máximo 100 caracteres');
+      isValid = false;
+    } else {
+      setDescricaoError('');
+    }
+
+    return isValid;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    let imageUrl = imagem;
+    if (!validateForm()) return;
 
+    let imageUrl = imagem;
     try {
       if (imageFile) {
         const formData = new FormData();
         formData.append('image', imageFile);
-
-        const uploadResponse = await axios.post('http://localhost:8080/api/upload/image', formData, {
-          headers: {
-            'Content-Type': 'multipart/form-data'
-          }
+        const uploadResponse = await api.post('/upload/image', formData, {
+          headers: { 'Content-Type': 'multipart/form-data' },
         });
         imageUrl = uploadResponse.data;
-        console.log("DEBUG (Frontend): Imagem enviada para:", imageUrl);
-      }
-
-      const validateForm = () => {
-        let isValid = true;
-
-        if (!marca) {
-          setMarcaError('Marca é obrigatória');
-          isValid = false;
-        }
-
-        if (!modelo) {
-          setModeloError('Modelo é obrigatório');
-          isValid = false;
-        }
-
-        if (!ano) {
-          setAnoError('Ano é obrigatório');
-          isValid = false;
-        } else if (parseInt(ano) < 1900 || parseInt(ano) > nextYear) {
-          setAnoError(`O ano deve estar entre 1900 e ${nextYear}`);
-          isValid = false;
-        }
-
-        if (!cor) {
-          setCorError('Cor é obrigatória');
-          isValid = false;
-        }
-
-        if (!preco) {
-          setPrecoError('Preço é obrigatório');
-          isValid = false;
-        } else if (parseFloat(preco) <= 0) {
-          setPrecoError('O preço deve ser maior que zero');
-          isValid = false;
-        }
-
-        return isValid;
-      };
-
-      if (!validateForm()) {
-        return;
       }
 
       const veiculoData = {
@@ -168,34 +148,42 @@ const Veiculos = () => {
         ano: parseInt(ano),
         cor,
         descricao,
-        preco: parseFloat(preco),
+        preco: parseFloat(preco.replace(',', '.')),
         dataCadastro: new Date().toISOString().split('T')[0],
-        imagem: imageUrl
+        imagem: imageUrl,
       };
 
       if (editId) {
         await api.put(`/veiculos/${editId}`, veiculoData);
-        setEditId(null);
       } else {
         await api.post('/veiculos', veiculoData);
       }
 
-      setModelo('');
-      setMarca('');
-      setAno('');
-      setCor('');
-      setDescricao('');
-      setPreco('');
-      setDataCadastro('');
-      setImagem('');
-      setImageFile(null);
       listarVeiculos();
-      alert(editId ? 'Veículo atualizado com sucesso!' : 'Veículo cadastrado com sucesso!');
-
+      limparFormulario();
+      setShowModal(false);
+      toast.success(editId ? 'Atualizado com sucesso!' : 'Cadastrado com sucesso!');
     } catch (error) {
-      console.error('Erro ao salvar veículo:', error.response ? error.response.data : error.message);
-      alert(`Erro ao salvar veículo: ${error.response?.data?.message || error.message}`);
+      toast.error('Erro ao salvar veículo: ' + error.message);
+      toast.error('Erro ao salvar veículo.');
     }
+  };
+
+  const limparFormulario = () => {
+    setEditId(null);
+    setModelo('');
+    setMarca('');
+    setAno('');
+    setCor('');
+    setDescricao('');
+    setPreco('');
+    setImagem('');
+    setImageFile(null);
+    setMarcaError('');
+    setModeloError('');
+    setAnoError('');
+    setCorError('');
+    setPrecoError('');
   };
 
   const handleEdit = (veiculo) => {
@@ -205,216 +193,251 @@ const Veiculos = () => {
     setAno(veiculo.ano);
     setCor(veiculo.cor);
     setDescricao(veiculo.descricao);
-    setPreco(veiculo.preco);
-    setDataCadastro(veiculo.dataCadastro);
+    setPreco(veiculo.preco?.toString().replace('.', ','));
     setImagem(veiculo.imagem);
     setImageFile(null);
+    setShowModal(true);
   };
 
   const handleDelete = async (id) => {
-    if (window.confirm('Deseja realmente excluir este veículo?')) {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Enter') {
+        toast.dismiss(toastId);
+        proceedWithDelete(id);
+      } else if (e.key === 'Escape') {
+        toast.dismiss(toastId);
+      }
+    };
+
+    const proceedWithDelete = async (id) => {
       try {
         await api.delete(`/veiculos/${id}`);
         listarVeiculos();
-        alert('Veículo excluído com sucesso!');
+        toast.success('Veículo excluído com sucesso!');
       } catch (error) {
-        console.error('Erro ao excluir veículo:', error);
-        alert('Erro ao excluir veículo.');
+        toast.error('Erro ao excluir veículo.');
       }
-    }
+    };
+
+    const toastId = toast.warning('Deseja realmente excluir este veículo?', {
+      position: "top-right",
+      autoClose: false,
+      closeOnClick: false,
+      draggable: false,
+      onOpen: () => {
+        document.addEventListener('keydown', handleKeyDown);
+      },
+      onClose: () => {
+        document.removeEventListener('keydown', handleKeyDown);
+      }
+    });
+
+    toast.update(toastId, {
+      render: (
+        <div style={{ padding: '16px' }}>
+          <p>Deseja realmente excluir este veículo?</p>
+          <div style={{ marginTop: '16px', display: 'flex', justifyContent: 'flex-end', gap: '8px' }}>
+            <button className="toastify-button toastify-button-yes" onClick={() => {
+              toast.dismiss(toastId);
+              proceedWithDelete(id);
+            }}>Sim</button>
+            <button className="toastify-button toastify-button-no" onClick={() => toast.dismiss(toastId)}>Não</button>
+          </div>
+        </div>
+      ),
+      closeButton: false,
+    });
   };
 
   return (
     <div className="container">
-      <h1>Gerenciar Veículos</h1>
-
-      <form onSubmit={handleSubmit} className="veiculo-form">
-        <div className="form-group">
-          <div className="field-pair">
-            <div className="field-item">
-              <label>Marca *</label>
-              <input
-                type="text"
-                placeholder="Marca"
-                value={marca}
-                onChange={(e) => setMarca(e.target.value)}
-                required
-                minLength="2"
-                maxLength="50"
-              />
-            </div>
-            <div className="field-item">
-              <label>Modelo *</label>
-              <input
-                type="text"
-                placeholder="Modelo"
-                value={modelo}
-                onChange={(e) => setModelo(e.target.value)}
-                required
-                minLength="2"
-                maxLength="50"
-              />
-            </div>
-          </div>
-        </div>
-
-        <div className="form-group">
-          <div className="field-pair">
-            <div className="field-item">
-              <label>Cor *</label>
-              <input
-                type="text"
-                placeholder="Cor"
-                value={cor}
-                onChange={(e) => setCor(e.target.value)}
-                required
-                minLength="2"
-                maxLength="50"
-              />
-            </div>
-            <div className="field-item">
-              <label>Ano *</label>
-              <input
-                type="number"
-                placeholder="Ano"
-                value={ano}
-                onChange={(e) => setAno(e.target.value)}
-                required
-                min="1900"
-                max={nextYear}
-              />
-            </div>
-          </div>
-        </div>
-
-        <div className="form-group">
-          <label>Preço *</label>
-          <input
-            type="number"
-            placeholder="Preço"
-            value={preco}
-            onChange={(e) => setPreco(e.target.value)}
-            required
-            min="0.01"
-            step="0.01"
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={true}
+        closeOnClick={false}
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        closeButton={<CustomCloseButton />}
+      />
+      <h1 style={{ marginTop: '30px' }}>Veículos Cadastrados</h1>
+      <div className="search-container" style={{ marginTop: '20px' }}>
+        {showSearch && (
+          <SearchBar
+            onSearch={handleSearch}
+            placeholder="Pesquisar por marca, modelo, cor, ano ou preço..."
           />
-        </div>
-        
-        <div className="form-group">
-          <label>Descrição</label>
-          <div className="descricao-container">
-            <textarea
-              placeholder="Descrição"
-              value={descricao}
-              onChange={(e) => setDescricao(e.target.value)}
-              maxLength="100"
-              rows="5"
-              className="descricao-textarea"
-            ></textarea>
-            <div className="char-counter">{descricao.length}/100</div>
-          </div>
-        </div>
-
-        <div className="form-group">
-          <label>Imagem</label>
-          <div className="image-upload-container">
-            {imagem && (
-              <img
-                src={imagem}
-                alt="Preview"
-                className="image-preview"
-                style={{ maxWidth: '200px', maxHeight: '200px', objectFit: 'contain' }}
-              />
-            )}
-            <input
-              type="file"
-              accept="image/*"
-              onChange={(e) => handleImageChange(e)}
-            />
-            {imageFile && (
-              <button onClick={() => { setImageFile(null); setImagem(''); }} className="remove-image-btn">
-                Remover imagem
-              </button>
-            )}
-             {!imageFile && imagem && (
-                <button onClick={() => setImagem('')} className="remove-image-btn">
-                  Remover imagem existente
-                </button>
-            )}
-          </div>
-        </div>
-
-        <button type="submit" className="submit-btn">
-          {editId ? 'Atualizar' : 'Cadastrar'}
-        </button>
-      </form>
-
-      <div className="veiculos-section">
-        <button 
-          onClick={() => setShowVeiculos(!showVeiculos)}
-          className="veiculos-toggle-btn"
-        >
-          Veículos Cadastrados
-        </button>
-        {showVeiculos && (
-          <div style={{ width: '100%' }}>
-            <h2>Veículos Cadastrados</h2>
-            <div className="search-container" style={{ marginTop: '20px' }}>
-              {showSearch && (
-                <SearchBar 
-                  onSearch={(searchTerm) => handleSearch(searchTerm)} 
-                  placeholder="Pesquisar por marca, modelo, cor, ano ou preço..." 
-                />
-              )}
-              <button 
-                onClick={() => setShowSearch(!showSearch)}
-                className="search-toggle-btn"
-              >
-                <FontAwesomeIcon icon={faSearch} size="lg" />
-              </button>
-            </div>
-            <table style={{ width: '100%' }}>
-              <thead>
-                <tr>
-                  <th>Marca</th>
-                  <th>Modelo</th>
-                  <th>Ano</th>
-                  <th>Cor</th>
-                  <th>Preço</th>
-                  <th>Imagem</th>
-                  <th>Ações</th>
-                </tr>
-              </thead>
-              <tbody>
-                {veiculos.length > 0 ? (
-                  veiculos.map((veiculo) => (
-                    <tr key={veiculo.id}>
-                      <td>{veiculo.marca}</td>
-                      <td>{veiculo.modelo}</td>
-                      <td>{veiculo.ano}</td>
-                      <td>{veiculo.cor}</td>
-                      <td>R$ {veiculo.preco ? veiculo.preco.toFixed(2) : 'N/A'}</td>
-                      <td>
-                        {veiculo.imagem && (
-                          <img src={veiculo.imagem} alt={veiculo.modelo} style={{ width: '50px', height: 'auto' }} />
-                        )}
-                      </td>
-                      <td>
-                        <button onClick={() => handleEdit(veiculo)} className="edit-btn">Editar</button>
-                        <button onClick={() => handleDelete(veiculo.id)} className="delete-btn">Excluir</button>
-                      </td>
-                    </tr>
-                  ))
-                ) : (
-                  <tr>
-                    <td colSpan="7">Nenhum veículo cadastrado.</td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
-          </div>
         )}
+        <button onClick={() => setShowSearch(!showSearch)} className="search-toggle-btn">
+          <FontAwesomeIcon icon={faSearch} size="lg" />
+        </button>
       </div>
+
+      <table style={{ width: '100%' }}>
+        <thead>
+          <tr>
+            <th>Marca</th>
+            <th>Modelo</th>
+            <th>Ano</th>
+            <th>Cor</th>
+            <th>Preço</th>
+            <th>Imagem</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+          {veiculos.length > 0 ? (
+            veiculos.map((v) => (
+              <tr key={v.id}>
+                <td>{v.marca}</td>
+                <td>{v.modelo}</td>
+                <td>{v.ano}</td>
+                <td>{v.cor}</td>
+                <td>R$ {v.preco?.toFixed(2)}</td>
+                <td>
+                  {v.imagem && <img src={v.imagem} alt={v.modelo} style={{ width: '50px' }} />}
+                </td>
+                <td>
+                  <button onClick={() => handleEdit(v)} className="edit-btn">
+                    Editar
+                  </button>
+                  <button onClick={() => handleDelete(v.id)} className="delete-btn">
+                    Excluir
+                  </button>
+                </td>
+              </tr>
+            ))
+          ) : (
+            <tr>
+              <td colSpan="7">Nenhum veículo cadastrado.</td>
+            </tr>
+          )}
+        </tbody>
+      </table>
+
+      {/* BOTÃO DE FORMULÁRIO DEPOIS */}
+      <button className="open-modal-btn" onClick={() => setShowModal(true)} style={{ marginTop: '30px' }}>
+        Adicionar Veículo
+      </button>
+
+      {showModal && (
+        <div className="modal-overlay">
+          <div className="modal">
+            <h2>{editId ? 'Editar Veículo' : 'Cadastrar Veículo'}</h2>
+            <form onSubmit={handleSubmit} className="veiculo-form">
+              <div className="form-group">
+                <div className="field-pair">
+                  <div className="field-item">
+                    <label>Marca *</label>
+                    <input
+                      type="text"
+                      placeholder="Marca"
+                      value={marca}
+                      onChange={(e) => setMarca(e.target.value)}
+                      required
+                      minLength="2"
+                      maxLength="50"
+                    />
+                  </div>
+                  <div className="field-item">
+                    <label>Modelo *</label>
+                    <input
+                      type="text"
+                      placeholder="Modelo"
+                      value={modelo}
+                      onChange={(e) => setModelo(e.target.value)}
+                      required
+                      minLength="2"
+                      maxLength="50"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div className="form-group">
+                <div className="field-pair">
+                  <div className="field-item">
+                    <label>Cor *</label>
+                    <input
+                      type="text"
+                      placeholder="Cor"
+                      value={cor}
+                      onChange={(e) => setCor(e.target.value)}
+                      required
+                      minLength="2"
+                      maxLength="50"
+                    />
+                  </div>
+                  <div className="field-item">
+                    <label>Ano *</label>
+                    <input
+                      type="number"
+                      placeholder="Ano"
+                      value={ano}
+                      onChange={(e) => setAno(e.target.value)}
+                      required
+                      min="1900"
+                      max={nextYear}
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div className="form-group">
+                <div className="field-item">
+                  <label>Preço *</label>
+                  <input
+                    type="text"
+                    placeholder="Preço"
+                    value={preco}
+                    onChange={(e) => setPreco(e.target.value)}
+                    required
+                    pattern="^\d+([.,]\d{1,2})?$"
+                    title="Use ponto ou vírgula como separador decimal. Ex: 25000.00 ou 25000,00"
+                  />
+
+                </div>
+              </div>
+
+              <div className="form-group">
+                <div className="field-item">
+                  <label>Descrição</label>
+                  <div className="descricao-container">
+                    <textarea
+                      placeholder="Descrição"
+                      value={descricao}
+                      onChange={(e) => setDescricao(e.target.value)}
+                      maxLength="100"
+                      rows="5"
+                      className="descricao-textarea"
+                    ></textarea>
+                    <div className="char-counter">{descricao.length}/100</div>
+                  </div>
+                </div>
+              </div>
+              <div className="image-upload-container">
+                <input type="file" onChange={handleImageChange} />
+                {imagem && <img src={imagem} alt="Preview" className="image-preview" />}
+              </div>
+              <button className="submit-btn" type="submit">
+                {editId ? 'Atualizar' : 'Cadastrar'}
+              </button>
+            </form>
+            <button
+              className="close-modal-btn"
+              onClick={() => {
+                setShowModal(false);
+                limparFormulario();
+              }}
+            >
+              Fechar
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

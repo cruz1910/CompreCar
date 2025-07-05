@@ -1,11 +1,19 @@
 import React, { useEffect, useState } from "react";
 import api from '../services/api'; // importa api axios configurada
 import '../style/Pedidos.css';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import '../style/Toastify.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import SearchBar from '../components/SearchBar';
 
 export default function ListaPedidos() {
+  const CustomCloseButton = ({ closeToast }) => (
+    <span onClick={closeToast} className="toastify-close-button">
+      ×
+    </span>
+  );
   const user = JSON.parse(localStorage.getItem("user"));
   const [pedidos, setPedidos] = useState([]);
   const [originalPedidos, setOriginalPedidos] = useState([]);
@@ -63,7 +71,7 @@ export default function ListaPedidos() {
         old.map((p) => (p.id === pedidoId ? { ...p, status: novoStatus } : p))
       );
     } catch (e) {
-      alert(e.response?.data?.message || e.message || "Falha ao atualizar status");
+      toast.error(e.response?.data?.message || e.message || "Falha ao atualizar status");
     }
   };
 
@@ -93,6 +101,18 @@ export default function ListaPedidos() {
   if (!user || (user.tipo !== "ADMIN" && user.tipo !== "FUNCIONARIO")) {
     return (
       <div className="container">
+        <ToastContainer
+          position="top-right"
+          autoClose={3000}
+          hideProgressBar={false}
+          newestOnTop={true}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          closeButton={<CustomCloseButton />}
+        />
         <h2>Acesso Negado</h2>
         <p>Você não tem permissão para acessar esta página.</p>
       </div>
@@ -101,6 +121,17 @@ export default function ListaPedidos() {
 
   return (
     <div className="container">
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={true}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
       <h1>Pedidos</h1>
       <div className="search-container" style={{ marginTop: '20px' }}>
         {showSearch && (

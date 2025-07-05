@@ -1,15 +1,24 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import api from '../services/api';
-import "../style/Registro.css"
 import '../style/global.css';
+import '../style/Registro.css';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import '../style/Toastify.css';
 
 const Register = () => {
+  const CustomCloseButton = ({ closeToast }) => (
+    <span onClick={closeToast} className="toastify-close-button">
+      ×
+    </span>
+  );
+
   const [formData, setFormData] = useState({
     nome: '',
     email: '',
     senha: '',
-    confirmacaoSenha: '' // Certifique-se que esta chave existe no estado inicial
+    confirmacaoSenha: ''
   });
 
   const [error, setError] = useState('');
@@ -17,7 +26,7 @@ const Register = () => {
   const handleChange = (e) => {
     const { name, value } = e.target;
     // Adicionado console.log para ver o que está sendo capturado por handleChange
-    console.log(`Input "${name}" alterado para: "${value}"`); 
+ 
     setFormData(prev => ({
       ...prev,
       [name]: value
@@ -29,20 +38,19 @@ const Register = () => {
 
     // Validate password match
     if (formData.senha !== formData.confirmacaoSenha) {
-      setError('As senhas não coincidem');
+      toast.error('As senhas não coincidem');
       return;
     }
 
     // Validate email format
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(formData.email)) {
-      setError('Email inválido');
+      toast.error('Email inválido');
       return;
     }
 
     // Adicionados console.log para ver o formData ANTES do envio
-    console.log("Estado completo do formData ANTES do envio:", formData);
-    console.log("Valor de formData.confirmacaoSenha ANTES do envio:", formData.confirmacaoSenha);
+
 
     try {
       // Make API call to register the user
@@ -55,7 +63,7 @@ const Register = () => {
       });
 
       setError('');
-      alert('Cadastro realizado com sucesso!');
+      toast.success('Cadastro realizado com sucesso!');
       setFormData({
         nome: '',
         email: '',
@@ -64,7 +72,7 @@ const Register = () => {
       });
       navigate('/login');
     } catch (error) {
-      setError(error.response?.data?.message || 'Erro ao cadastrar usuário. Por favor, tente novamente.');
+      toast.error(error.response?.data?.message || 'Erro ao cadastrar usuário. Por favor, tente novamente.');
     }
   };
 
@@ -73,13 +81,22 @@ const Register = () => {
   return (
     <div className="register-container">
       <div className="register-box">
+        <ToastContainer
+          position="top-right"
+          autoClose={3000}
+          hideProgressBar={false}
+          newestOnTop={true}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          closeButton={<CustomCloseButton />}
+        />
         <h2>Cadastro</h2>
-        
-        {error && <div className="error-message">{error}</div>}
 
         <form onSubmit={handleSubmit}>
           <div className="form-group">
-            <label htmlFor="nome">Nome</label>
             <input
               type="text"
               id="nome"
@@ -87,11 +104,11 @@ const Register = () => {
               value={formData.nome}
               onChange={handleChange}
               required
+              placeholder="Nome"
             />
           </div>
 
           <div className="form-group">
-            <label htmlFor="email">Email</label>
             <input
               type="email"
               id="email"
@@ -99,11 +116,11 @@ const Register = () => {
               value={formData.email}
               onChange={handleChange}
               required
+              placeholder="Email"
             />
           </div>
 
           <div className="form-group">
-            <label htmlFor="senha">Senha</label>
             <input
               type="password"
               id="senha"
@@ -111,11 +128,11 @@ const Register = () => {
               value={formData.senha}
               onChange={handleChange}
               required
+              placeholder="Senha"
             />
           </div>
 
           <div className="form-group">
-            <label htmlFor="confirmacaoSenha">Confirmar Senha</label>
             <input
               type="password"
               id="confirmacaoSenha" 
@@ -123,6 +140,7 @@ const Register = () => {
               value={formData.confirmacaoSenha}
               onChange={handleChange}
               required
+              placeholder="Confirmar Senha"
             />
           </div>
 

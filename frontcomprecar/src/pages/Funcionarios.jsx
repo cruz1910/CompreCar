@@ -6,8 +6,16 @@ import '../style/SearchBar.css';
 import { Navigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import '../style/Toastify.css';
 
 const Funcionarios = () => {
+  const CustomCloseButton = ({ closeToast }) => (
+    <span onClick={closeToast} className="toastify-close-button">
+      ×
+    </span>
+  );
   const [funcionarios, setFuncionarios] = useState([]);
   const [originalFuncionarios, setOriginalFuncionarios] = useState([]);
   const [nome, setNome] = useState('');
@@ -17,8 +25,8 @@ const Funcionarios = () => {
   const [editId, setEditId] = useState(null);
   const [loading, setLoading] = useState(false);
   const [showSearch, setShowSearch] = useState(true);
+  const [showModal, setShowModal] = useState(false);
 
-  // Search handler function
   const handleSearchFuncionarios = (searchTerm) => {
     if (!searchTerm) {
       setFuncionarios(originalFuncionarios);
@@ -34,7 +42,6 @@ const Funcionarios = () => {
   };
 
   useEffect(() => {
-    // Listen for search events from navbar
     const handleSearch = (event) => {
       const searchTerm = event.detail;
       handleSearchFuncionarios(searchTerm);
@@ -44,18 +51,12 @@ const Funcionarios = () => {
     return () => window.removeEventListener('search-funcionarios', handleSearch);
   }, []);
 
-  const [nomeError, setNomeError] = useState('');
-  const [emailError, setEmailError] = useState('');
-  const [senhaError, setSenhaError] = useState('');
-  const [confirmacaoError, setConfirmacaoError] = useState('');
-  const [error, setError] = useState('');
-
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem('user'));
 
     if (!user || user.tipo?.toUpperCase() !== 'ADMIN') {
-      alert('Acesso negado. Apenas administradores podem acessar esta página.');
-      Navigate('/'); // redireciona para a home ou outra página
+      toast.error('Acesso negado. Apenas administradores podem acessar esta página.');
+      Navigate('/');
       return;
     }
 
@@ -69,72 +70,33 @@ const Funcionarios = () => {
       setFuncionarios(response.data);
       setOriginalFuncionarios(response.data);
     } catch (error) {
-      console.error('Erro ao listar funcionários:', error);
-      alert('Erro ao carregar a lista de funcionários');
+      toast.error('Erro ao carregar a lista de funcionários: ' + error.message);
     } finally {
       setLoading(false);
     }
   };
 
-  const handleSearch = (searchTerm) => {
-    if (!searchTerm) {
-      setFuncionarios(originalFuncionarios);
-      return;
-    }
-
-    const filtered = originalFuncionarios.filter(funcionario => {
-      return (
-        funcionario.nome.toLowerCase().includes(searchTerm) ||
-        funcionario.email.toLowerCase().includes(searchTerm) ||
-        funcionario.tipo.toLowerCase().includes(searchTerm)
-      );
-    });
-
-    setFuncionarios(filtered);
-  };
-
-  useEffect(() => {
-    listarFuncionarios();
-  }, []);
-
   const validateForm = () => {
     let isValid = true;
 
-    if (!nome) {
-      setNomeError('Nome é obrigatório');
+    if (!nome || nome.length < 2) {
+      toast.error('Nome deve ter no mínimo 2 caracteres');
       isValid = false;
-    } else if (nome.length < 2) {
-      setNomeError('Nome deve ter no mínimo 2 caracteres');
-      isValid = false;
-    } else {
-      setNomeError('');
     }
 
     if (!email) {
-      setEmailError('Email é obrigatório');
+      toast.error('Email é obrigatório');
       isValid = false;
-    } else {
-      setEmailError('');
     }
 
-    if (!senha) {
-      setSenhaError('Senha é obrigatória');
+    if (!senha || senha.length < 8) {
+      toast.error('A senha deve ter ao menos 8 caracteres');
       isValid = false;
-    } else if (senha.length < 8) {
-      setSenhaError('A senha deve ter ao menos 8 caracteres');
-      isValid = false;
-    } else {
-      setSenhaError('');
     }
 
-    if (!confirmacaoSenha) {
-      setConfirmacaoError('Confirmação de senha é obrigatória');
+    if (!confirmacaoSenha || senha !== confirmacaoSenha) {
+      toast.error('As senhas não coincidem');
       isValid = false;
-    } else if (senha !== confirmacaoSenha) {
-      setConfirmacaoError('As senhas não coincidem');
-      isValid = false;
-    } else {
-      setConfirmacaoError('');
     }
 
     return isValid;
@@ -162,25 +124,22 @@ const Funcionarios = () => {
         await api.post('/usuarios', data);
       }
 
-      setNome('');
-      setEmail('');
-      setSenha('');
-      setConfirmacaoSenha('');
-      setEditId(null);
-      setNomeError('');
-      setEmailError('');
-      setSenhaError('');
-      setConfirmacaoError('');
-      setError('');
+      limparFormulario();
       listarFuncionarios();
     } catch (err) {
-      const msg = err.response?.data?.message ||
-        err.response?.data ||
-        'Erro ao salvar funcionário';
-      setError(msg);
+      const msg = err.response?.data?.message || err.response?.data || 'Erro ao salvar funcionário';
+      toast.error(msg);
     } finally {
       setLoading(false);
     }
+  };
+
+  const limparFormulario = () => {
+    setNome('');
+    setEmail('');
+    setSenha('');
+    setConfirmacaoSenha('');
+    setEditId(null);
   };
 
   const handleEdit = (funcionario) => {
@@ -189,88 +148,80 @@ const Funcionarios = () => {
     setEmail(funcionario.email);
     setSenha('');
     setConfirmacaoSenha('');
-    setNomeError('');
-    setEmailError('');
-    setSenhaError('');
-    setConfirmacaoError('');
-    setError('');
+    setShowModal(true);
   };
 
   const handleDelete = async (id) => {
-    if (window.confirm('Deseja realmente excluir este funcionário?')) {
+    // Definir as funções auxiliares primeiro
+    const handleKeyDown = (e) => {
+      if (e.key === 'Enter') {
+        toast.dismiss(toastId);
+        proceedWithDelete(id);
+      } else if (e.key === 'Escape') {
+        toast.dismiss(toastId);
+      }
+    };
+
+    const proceedWithDelete = async (id) => {
       setLoading(true);
       try {
         await api.delete(`/usuarios/funcionarios/${id}`);
         setFuncionarios(funcionarios.filter(f => f.id !== id));
+        toast.success('Funcionário excluído com sucesso!');
       } catch (err) {
-        alert(err.response?.data?.message || 'Erro ao excluir funcionário');
+        toast.error(err.response?.data?.message || 'Erro ao excluir funcionário');
       } finally {
         setLoading(false);
       }
-    }
+    };
+
+    // Criar o toast
+    const toastId = toast.warning('Deseja realmente excluir este funcionário?', {
+      position: "top-right",
+      autoClose: false,
+      closeOnClick: false,
+      draggable: false,
+      onOpen: () => {
+        document.addEventListener('keydown', handleKeyDown);
+      },
+      onClose: () => {
+        document.removeEventListener('keydown', handleKeyDown);
+      }
+    });
+
+    // Adicionar botões de confirmação no toast
+    toast.update(toastId, {
+      render: (
+        <div style={{ padding: '16px' }}>
+          <p>Deseja realmente excluir este funcionário?</p>
+          <div style={{ marginTop: '16px', display: 'flex', justifyContent: 'flex-end', gap: '8px' }}>
+            <button className="toastify-button toastify-button-yes" onClick={() => {
+              toast.dismiss(toastId);
+              proceedWithDelete(id);
+            }}>Sim</button>
+            <button className="toastify-button toastify-button-no" onClick={() => toast.dismiss(toastId)}>Não</button>
+          </div>
+        </div>
+      ),
+      closeButton: false,
+    });
   };
 
   return (
     <div className="container">
-      <h1>Gerenciar Funcionários</h1>
-
-      {error && <p className="error">{error}</p>}
-
-      <form onSubmit={handleSubmit} className="form">
-        <div className="form-group">
-          <input
-            type="text"
-            placeholder="Nome"
-            value={nome}
-            onChange={(e) => setNome(e.target.value)}
-            required
-          />
-          {nomeError && <p className="error">{nomeError}</p>}
-        </div>
-
-        <div className="form-group">
-          <input
-            type="email"
-            placeholder="Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-          {emailError && <p className="error">{emailError}</p>}
-        </div>
-
-        <div className="form-group">
-          <input
-            type="password"
-            placeholder="Senha"
-            value={senha}
-            onChange={(e) => setSenha(e.target.value)}
-            required
-          />
-          {senhaError && <p className="error">{senhaError}</p>}
-        </div>
-
-        <div className="form-group">
-          <input
-            type="password"
-            placeholder="Confirme a senha"
-            value={confirmacaoSenha}
-            onChange={(e) => setConfirmacaoSenha(e.target.value)}
-            required
-          />
-          {confirmacaoError && <p className="error">{confirmacaoError}</p>}
-        </div>
-
-        <button className='buttonAtt'
-          type="submit"
-          disabled={loading}
-
-        >
-          {loading ? 'Carregando...' : editId ? 'Atualizar' : 'Cadastrar'}
-        </button>
-      </form>
-
-      <h2>Funcionários</h2>
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={true}
+        closeOnClick={false}
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        closeButton={<CustomCloseButton />}
+      />
+      <h1>Funcionários</h1>
 
       <div className="search-container" style={{ marginTop: '20px' }}>
         {showSearch && (
@@ -279,11 +230,7 @@ const Funcionarios = () => {
             placeholder="Pesquisar por nome, email ou tipo..."
           />
         )}
-
-        <button
-          onClick={() => setShowSearch(!showSearch)}
-          className="search-toggle-btn"
-        >
+        <button onClick={() => setShowSearch(!showSearch)} className="search-toggle-btn">
           <FontAwesomeIcon icon={faSearch} size="lg" />
         </button>
       </div>
@@ -317,6 +264,77 @@ const Funcionarios = () => {
           )}
         </tbody>
       </table>
+
+      <button className="open-modal-btn" onClick={() => setShowModal(true)}>
+        Adicionar Funcionário
+      </button>
+
+      {showModal && (
+        <div className="modal-overlay">
+          <div className="modal">
+            <button
+              type="button"
+              className="close-modal-btn"
+              onClick={() => {
+                setShowModal(false);
+                limparFormulario();
+              }}
+            >
+              Fechar
+            </button>
+
+            <h2>{editId ? 'Editar Funcionário' : 'Cadastrar Funcionário'}</h2>
+
+
+
+            <form onSubmit={handleSubmit} className="form">
+              <div className="form-group">
+                <input
+                  type="text"
+                  placeholder="Nome"
+                  value={nome}
+                  onChange={(e) => setNome(e.target.value)}
+                  required
+                />
+              </div>
+
+              <div className="form-group">
+                <input
+                  type="email"
+                  placeholder="Email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                />
+              </div>
+
+              <div className="form-group">
+                <input
+                  type="password"
+                  placeholder="Senha"
+                  value={senha}
+                  onChange={(e) => setSenha(e.target.value)}
+                  required
+                />
+              </div>
+
+              <div className="form-group">
+                <input
+                  type="password"
+                  placeholder="Confirme a senha"
+                  value={confirmacaoSenha}
+                  onChange={(e) => setConfirmacaoSenha(e.target.value)}
+                  required
+                />
+              </div>
+
+              <button className="submit-btn" type="submit" disabled={loading}>
+                {loading ? 'Carregando...' : editId ? 'Atualizar' : 'Cadastrar'}
+              </button>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

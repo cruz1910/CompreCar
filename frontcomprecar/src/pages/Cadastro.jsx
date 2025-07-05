@@ -3,8 +3,16 @@ import { useNavigate } from 'react-router-dom';
 import api from '../services/api';
 import '../styles/Login.css';
 import '../styles/global.css';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import '../style/Toastify.css';
 
 const Cadastro = () => {
+  const CustomCloseButton = ({ closeToast }) => (
+    <span onClick={closeToast} className="toastify-close-button">
+      ×
+    </span>
+  );
   const navigate = useNavigate();
   const [nome, setNome] = useState('');
   const [email, setEmail] = useState('');
@@ -73,25 +81,30 @@ const Cadastro = () => {
       });
       navigate('/login');
     } catch (error) {
-      console.error('Erro no cadastro:', error.response?.data || error.message);
+      toast.error('Erro no cadastro: ' + (error.response?.data || error.message));
       const errorMessage = error.response?.data?.message ||
         error.response?.data ||
         'Erro ao fazer cadastro. Por favor, tente novamente.';
-      setError(errorMessage);
+      toast.error(errorMessage);
     }
 
   };
 
   return (
-    <div className="login-page-split">
-        <img src={carroImg} alt="Carro" className="login-image" />
-        <div className="login-left-half">
-        </div>
-        <div className="login-right-half">
-          <h1 className="login-title">Bem-vindo de volta!</h1>
     <div className="login-container">
-      <h2>Cadastro</h2>
-      {error && <p className="error">{error}</p>}
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={true}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        closeButton={<CustomCloseButton />}
+      />
+      <h1>Cadastro</h1>
       <form onSubmit={handleCadastro}>
         <div className="form-group">
           <input
@@ -138,8 +151,6 @@ const Cadastro = () => {
       <p className="register-link">
         Já tem uma conta? <Link to="/login">Faça login aqui</Link>
       </p>
-    </div>
-    </div>
     </div>
   );
 };

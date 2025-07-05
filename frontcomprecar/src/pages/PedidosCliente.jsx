@@ -1,12 +1,20 @@
 import React, { useEffect, useState } from "react";
 import api from "../services/api";
 import '../style/Pedidos.css';
-import '../style/global.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import SearchBar from '../components/SearchBar';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import '../style/Toastify.css';
+import '../style/global.css';
 
 const PedidosCliente = () => {
+  const CustomCloseButton = ({ closeToast }) => (
+    <span onClick={closeToast} className="toastify-close-button">
+      ×
+    </span>
+  );
   const [pedidos, setPedidos] = useState([]);
   const [originalPedidos, setOriginalPedidos] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -52,7 +60,7 @@ const PedidosCliente = () => {
         setPedidos(response.data);
         setOriginalPedidos(response.data);
       } catch (err) {
-        console.error("Erro ao buscar pedidos:", err);
+        toast.error("Erro ao buscar pedidos: " + err.message);
         setErro("Erro ao carregar seus pedidos.");
       } finally {
         setLoading(false);
@@ -63,20 +71,63 @@ const PedidosCliente = () => {
   }, []); // executa apenas uma vez após montar o componente
 
   const cancelarPedido = async (id) => {
-    if (!window.confirm("Deseja realmente cancelar este pedido?")) return;
+    // Definir as funções auxiliares primeiro
+    const handleKeyDown = (e) => {
+      if (e.key === 'Enter') {
+        toast.dismiss(toastId);
+        proceedWithCancel(id);
+      } else if (e.key === 'Escape') {
+        toast.dismiss(toastId);
+      }
+    };
 
-    try {
-      await api.put(`/pedidos/${id}/status`, { status: "CANCELADO" });
-      setPedidos((anterior) =>
-        anterior.map((p) =>
-          p.id === id ? { ...p, status: "CANCELADO" } : p
-        )
-      );
-      alert("Pedido cancelado com sucesso.");
-    } catch (err) {
-      console.error("Erro ao cancelar pedido:", err);
-      alert("Erro ao cancelar pedido.");
-    }
+    const proceedWithCancel = async (id) => {
+      try {
+        await api.put(`/pedidos/${id}/status`, { status: "CANCELADO" });
+        setPedidos((anterior) =>
+          anterior.map((p) =>
+            p.id === id ? { ...p, status: "CANCELADO" } : p
+          )
+        );
+        toast.success("Pedido cancelado com sucesso.");
+      } catch (err) {
+        toast.error("Erro ao cancelar pedido.");
+      }
+    };
+
+    // Criar o toast
+    const toastId = toast.warning('Deseja realmente cancelar este pedido?', {
+      position: "top-right",
+      autoClose: false,
+      closeOnClick: false,
+      draggable: false,
+      onOpen: () => {
+        document.addEventListener('keydown', handleKeyDown);
+      },
+      onClose: () => {
+        document.removeEventListener('keydown', handleKeyDown);
+      }
+    });
+
+    // Adicionar botões de confirmação no toast
+    toast.update(toastId, {
+      render: (
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px' }}>
+          <span>Deseja realmente cancelar este pedido?</span>
+          <div style={{ display: 'flex', gap: '8px' }}>
+            <button onClick={() => {
+              toast.dismiss(toastId);
+              proceedWithCancel(id);
+            }}>Sim</button>
+            <button onClick={() => toast.dismiss(toastId)}>Não</button>
+          </div>
+        </div>
+      ),
+      closeButton: false,
+    });
+    return;
+
+
   };
 
   // Revalida usuário e tipo para acesso restrito
@@ -94,6 +145,18 @@ const PedidosCliente = () => {
 
   return (
     <div className="container">
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={true}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        closeButton={<CustomCloseButton />}
+      />
       <h1>Meus Pedidos</h1>
       <div className="search-container" style={{ marginTop: '20px' }}>
         {showSearch && (
