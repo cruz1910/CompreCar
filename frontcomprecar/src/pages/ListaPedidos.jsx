@@ -102,7 +102,7 @@ export default function ListaPedidos() {
     return (
       <div className="container">
         <ToastContainer
-          position="top-right"
+          position="top-center"
           autoClose={3000}
           hideProgressBar={false}
           newestOnTop={true}
@@ -122,7 +122,7 @@ export default function ListaPedidos() {
   return (
     <div className="container">
       <ToastContainer
-        position="top-right"
+        position="top-center"
         autoClose={3000}
         hideProgressBar={false}
         newestOnTop={true}

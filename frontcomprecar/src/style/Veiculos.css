@@ -1,12 +1,12 @@
-/* Formulário de Cadastro */
+
 .veiculo-form {
   background-color: white;
-  padding: 20px;
+  padding: 12px;
   margin: 20px auto;
   border-radius: 8px;
   box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
   width: 100%;
-  max-width: 450px;
+  max-width: 450px; 
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   font-size: 15px;
   box-sizing: border-box;
@@ -20,6 +20,8 @@
 
 .field-item {
   flex: 1;
+  position: relative;
+  margin-bottom: 20px;
 }
 
 .field-item label {
@@ -31,18 +33,26 @@
 .field-item input,
 .field-item textarea {
   width: 100%;
-  padding: 8px;
+  padding: 12px;
   font-size: 14px;
   border: 1px solid #ddd;
   border-radius: 4px;
   box-sizing: border-box;
+  transition: border-color 0.3s;
+}
+
+.field-item input:focus,
+.field-item textarea:focus {
+  border-color: #2563eb;
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.1);
 }
 
 .veiculo-form textarea {
   height: 150px;
   resize: vertical;
   min-height: 100px;
-  max-height: 250px;
+  max-height: 15px;
   padding: 12px;
   font-size: 15px;
   line-height: 1.5;
@@ -51,6 +61,17 @@
 
 .descricao-container {
   position: relative;
+  background: #f8f9fa;
+  border-radius: 6px;
+  padding: 12px;
+}
+
+.char-counter {
+  position: absolute;
+  bottom: 12px;
+  right: 12px;
+  color: #6c757d;
+  font-size: 14px;
 }
 
 .descricao-textarea {
@@ -68,73 +89,80 @@
   font-size: 14px;
   padding: 12px;
   white-space: pre-wrap;
-  word-wrap: break-word;
   overflow-wrap: break-word;
-  hyphens: auto;
-  box-sizing: border-box;
-  margin: 0;
   display: block;
 }
 
-.descricao-textarea:focus {
-  outline: none;
+input, textarea {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  font-size: 16px;
+  transition: border-color 0.2s ease;
+}
+
+input:focus, textarea:focus {
   border-color: #007bff;
-  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+  outline: none;
 }
 
-.char-counter {
-  position: absolute;
-  bottom: 8px;
-  right: 12px;
-  color: #666;
-  font-size: 12px;
-  background: #f8f9fa;
-  padding: 2px 8px;
-  border-radius: 4px;
-  z-index: 1;
+input::placeholder, textarea::placeholder {
+  color: #999;
 }
 
-/* Style para quando o limite é atingido */
-.descricao-textarea:invalid {
-  border-color: #dc3545;
-}
-
-.descricao-textarea:invalid + .char-counter {
-  color: #dc3545;
+textarea {
+  resize: vertical;
+  min-height: 120px;
 }
 
 .image-upload-container {
+  margin-top: 24px;
+  padding-top: 24px;
+  border-top: 1px solid #e0e0e0;
+}
+
+
+.image-preview-section {
   display: flex;
-  flex-direction: column;
-  gap: 10px;
-  align-items: center;
+  justify-content: center;
+  margin-top: 10px;
+}
+
+.image-preview-container {
+  background: #f8f9fa;
+  border-radius: 6px;
+  max-width: 100%;
 }
 
 .image-preview {
-  max-width: 180px;
-  max-height: 180px;
-  object-fit: cover;
+  max-width: 100%;
+  max-height: 100px;
+  object-fit: contain;
   border-radius: 4px;
-  margin-bottom: 10px;
 }
+
 
 .remove-image-btn {
-  background-color: #ef4444;
-  color: white;
-  border: none;
-  padding: 6px 10px;
-  border-radius: 4px;
+  background: #ff0000;
+  border: 1px solid #dc3545;
+  padding: 8px 16px;
+  border-radius: 6px;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: #ffffff;
+  transition: background-color 0.2s ease;
+  justify-content: center;
 }
 
-.remove-image-btn:hover {
-  background-color: #dc2626;
-}
 
-input[type="file"] {
-  padding: 6px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
+
+.remove-image-btn svg {
+  width: 16px;
+  height: 16px;
   cursor: pointer;
   font-size: 14px;
 }
@@ -155,7 +183,7 @@ input[type="file"] {
   background-color: #1d4ed8;
 }
 
-/* Botões de edição e exclusão */
+
 .edit-btn,
 .delete-btn {
   padding: 8px 12px;
@@ -174,8 +202,6 @@ input[type="file"] {
 .edit-btn:hover {
   opacity: 0.9;
 }
-
-/* Tabela de veículos */
 
 
 th, td {
@@ -197,4 +223,55 @@ td button {
 
 td button:hover {
   opacity: 0.8;
+}
+
+/* ========== Modal / Popup ========== */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal {
+  background-color: white;
+  padding: 30px;
+  border-radius: 8px;
+  width: 95%;
+  max-width: 500px;
+  position: relative;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+.close-modal-btn {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  background: #ef4444;
+  border: none;
+  color: white;
+  padding: 6px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.open-modal-btn {
+  padding: 10px 16px;
+  margin-bottom: 20px;
+  background-color: #2563eb;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+.open-modal-btn:hover {
+  background-color: #1d4ed8;
 }

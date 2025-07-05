@@ -39,6 +39,15 @@ const Veiculos = () => {
   const currentYear = new Date().getFullYear();
   const nextYear = currentYear + 1;
 
+  const formatPrice = (value) => {
+    if (!value) return 'R$ 0,00';
+    const number = parseFloat(value);
+    return new Intl.NumberFormat('pt-BR', {
+      style: 'currency',
+      currency: 'BRL'
+    }).format(number);
+  };
+
   useEffect(() => {
     listarVeiculos();
   }, []);
@@ -68,47 +77,55 @@ const Veiculos = () => {
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      setImageFile(file);
       const reader = new FileReader();
       reader.onloadend = () => {
         setImagem(reader.result);
       };
       reader.readAsDataURL(file);
-    } else {
-      setImageFile(null);
-      setImagem('');
+      setImageFile(file);
     }
+  };
+
+  const handleRemoveImage = () => {
+    setImagem('');
+    setImageFile(null);
   };
 
   const validateForm = () => {
     let isValid = true;
     if (!marca) {
+      toast.error('Marca é obrigatória');
       setMarcaError('Marca é obrigatória');
       isValid = false;
     } else setMarcaError('');
 
     if (!modelo) {
+      toast.error('Modelo é obrigatório');
       setModeloError('Modelo é obrigatório');
       isValid = false;
     } else setModeloError('');
 
     if (!ano || parseInt(ano) < 1900 || parseInt(ano) > nextYear) {
+      toast.error(`Ano inválido (1900-${nextYear})`);
       setAnoError(`Ano inválido (1900-${nextYear})`);
       isValid = false;
     } else setAnoError('');
 
     if (!cor) {
+      toast.error('Cor é obrigatória');
       setCorError('Cor é obrigatória');
       isValid = false;
     } else setCorError('');
 
     if (!preco) {
+      toast.error('Preço é obrigatório');
       setPrecoError('Preço é obrigatório');
       isValid = false;
     } else {
       const priceStr = preco.toString();
       const price = parseFloat(priceStr.replace(',', '.'));
       if (isNaN(price) || price <= 0) {
+        toast.error('Preço deve ser maior que 0 e usar ponto ou vírgula');
         setPrecoError('Preço deve ser maior que 0 e usar ponto ou vírgula');
         isValid = false;
       } else {
@@ -117,6 +134,7 @@ const Veiculos = () => {
     }
 
     if (descricao && descricao.length > 100) {
+      toast.error('Descrição deve ter no máximo 100 caracteres');
       setDescricaoError('Descrição deve ter no máximo 100 caracteres');
       isValid = false;
     } else {
@@ -251,18 +269,7 @@ const Veiculos = () => {
 
   return (
     <div className="container">
-      <ToastContainer
-        position="top-right"
-        autoClose={3000}
-        hideProgressBar={false}
-        newestOnTop={true}
-        closeOnClick={false}
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        closeButton={<CustomCloseButton />}
-      />
+     
       <h1 style={{ marginTop: '30px' }}>Veículos Cadastrados</h1>
       <div className="search-container" style={{ marginTop: '20px' }}>
         {showSearch && (
@@ -296,7 +303,7 @@ const Veiculos = () => {
                 <td>{v.modelo}</td>
                 <td>{v.ano}</td>
                 <td>{v.cor}</td>
-                <td>R$ {v.preco?.toFixed(2)}</td>
+                <td>{formatPrice(v.preco)}</td>
                 <td>
                   {v.imagem && <img src={v.imagem} alt={v.modelo} style={{ width: '50px' }} />}
                 </td>
@@ -318,7 +325,6 @@ const Veiculos = () => {
         </tbody>
       </table>
 
-      {/* BOTÃO DE FORMULÁRIO DEPOIS */}
       <button className="open-modal-btn" onClick={() => setShowModal(true)} style={{ marginTop: '30px' }}>
         Adicionar Veículo
       </button>
@@ -398,7 +404,6 @@ const Veiculos = () => {
                     pattern="^\d+([.,]\d{1,2})?$"
                     title="Use ponto ou vírgula como separador decimal. Ex: 25000.00 ou 25000,00"
                   />
-
                 </div>
               </div>
 
@@ -420,8 +425,23 @@ const Veiculos = () => {
               </div>
               <div className="image-upload-container">
                 <input type="file" onChange={handleImageChange} />
-                {imagem && <img src={imagem} alt="Preview" className="image-preview" />}
+                {imagem && (
+                  <>
+                    <div className="image-preview-section">
+                      <div className="image-preview-container">
+                        <img src={imagem} alt="Preview" className="image-preview" />
+                      </div>
+                    </div>
+                    <div style={{ display: 'flex', justifyContent: 'center', margin: '12px 0' }}>
+                      <button className="remove-image-btn" onClick={handleRemoveImage}>
+                        <FontAwesomeIcon icon={faTrash} />
+                        Remover foto
+                      </button>
+                    </div>
+                  </>
+                )}
               </div>
+
               <button className="submit-btn" type="submit">
                 {editId ? 'Atualizar' : 'Cadastrar'}
               </button>
@@ -438,6 +458,18 @@ const Veiculos = () => {
           </div>
         </div>
       )}
+       <ToastContainer
+        position="top-center"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={true}
+        closeOnClick={false}
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        closeButton={<CustomCloseButton />}
+      />
     </div>
   );
 };

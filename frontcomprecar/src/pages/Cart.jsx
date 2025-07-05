@@ -142,7 +142,7 @@ const Cart = () => {
   return (
     <div className="cart-container">
       <ToastContainer
-        position="center"
+        position="top-center"
         autoClose={3000}
         hideProgressBar={false}
         newestOnTop={true}

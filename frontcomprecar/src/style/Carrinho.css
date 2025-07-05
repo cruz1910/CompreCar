@@ -15,6 +15,7 @@
   padding: 15px;
   border-radius: 8px;
   gap: 20px;
+  background-color: #e6eaff; /* Cor de fundo diferente do body */
 }
 
 .cart-item-content {
@@ -64,6 +65,12 @@
   line-height: 1.4;
 }
 
+.descricao {
+  white-space: pre-wrap;     /* Mantém quebras de linha */
+  word-break: break-word;    /* Evita estouro horizontal */
+  color: #444;
+}
+
 .item-actions {
   margin-left: auto;
 }
@@ -94,7 +101,7 @@
 }
 
 .finalizar-btn {
-  background-color: #1e2a38;  /* Cor da navbar */
+  background-color: #1e2a38;
   color: rgb(255, 255, 255);
   border: none;
   padding: 10px 20px;

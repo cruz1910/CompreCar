@@ -111,17 +111,17 @@ const PedidosCliente = () => {
 
     // Adicionar botões de confirmação no toast
     toast.update(toastId, {
-      render: (
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px' }}>
-          <span>Deseja realmente cancelar este pedido?</span>
-          <div style={{ display: 'flex', gap: '8px' }}>
-            <button onClick={() => {
-              toast.dismiss(toastId);
-              proceedWithCancel(id);
-            }}>Sim</button>
-            <button onClick={() => toast.dismiss(toastId)}>Não</button>
-          </div>
-        </div>
+          render: (
+            <div style={{ padding: '16px' }}>
+              <p>Deseja realmente cancelar este pedido?</p>
+              <div style={{ marginTop: '16px', display: 'flex', justifyContent: 'flex-end', gap: '8px' }}>
+                <button className="toastify-button toastify-button-yes" onClick={() => {
+                  toast.dismiss(toastId);
+                  proceedWithCancel(id);
+                }}>Sim</button>
+                <button className="toastify-button toastify-button-no" onClick={() => toast.dismiss(toastId)}>Não</button>
+              </div>
+            </div>
       ),
       closeButton: false,
     });
@@ -146,7 +146,7 @@ const PedidosCliente = () => {
   return (
     <div className="container">
       <ToastContainer
-        position="top-right"
+        position="top-center"
         autoClose={3000}
         hideProgressBar={false}
         newestOnTop={true}
@@ -164,7 +164,7 @@ const PedidosCliente = () => {
             handleSearchPedidos(searchTerm);
           }} placeholder="Pesquisar por número do pedido, cliente ou status..." />
         )}
-        <button 
+        <button
           onClick={() => setShowSearch(!showSearch)}
           className="search-toggle-btn"
         >
@@ -178,7 +178,7 @@ const PedidosCliente = () => {
       ) : pedidos.length === 0 ? (
         <p>Você ainda não realizou pedidos.</p>
       ) : (
-          <table>
+        <table>
           <thead>
             <tr>
               <th>Numero do Pedido</th>

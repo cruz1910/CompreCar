@@ -82,7 +82,7 @@ const Register = () => {
     <div className="register-container">
       <div className="register-box">
         <ToastContainer
-          position="top-right"
+          position="top-center"
           autoClose={3000}
           hideProgressBar={false}
           newestOnTop={true}

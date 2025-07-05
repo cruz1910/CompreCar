@@ -209,18 +209,7 @@ const Funcionarios = () => {
 
   return (
     <div className="container">
-      <ToastContainer
-        position="top-right"
-        autoClose={3000}
-        hideProgressBar={false}
-        newestOnTop={true}
-        closeOnClick={false}
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        closeButton={<CustomCloseButton />}
-      />
+    
       <h1>Funcionários</h1>
 
       <div className="search-container" style={{ marginTop: '20px' }}>
@@ -335,6 +324,18 @@ const Funcionarios = () => {
           </div>
         </div>
       )}
+      <ToastContainer
+            position="top-center"
+            autoClose={3000}
+            hideProgressBar={false}
+            newestOnTop={true}
+            closeOnClick={false}
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+            closeButton={<CustomCloseButton />}
+          />
     </div>
   );
 };

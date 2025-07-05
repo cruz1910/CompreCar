@@ -28,9 +28,11 @@ const Cadastro = () => {
     let isValid = true;
 
     if (!nome) {
+      toast.error('Nome é obrigatório');
       setNomeError('Nome é obrigatório');
       isValid = false;
     } else if (nome.length < 2) {
+      toast.error('Nome deve ter no mínimo 2 caracteres');
       setNomeError('Nome deve ter no mínimo 2 caracteres');
       isValid = false;
     } else {
@@ -38,6 +40,7 @@ const Cadastro = () => {
     }
 
     if (!email) {
+      toast.error('Email é obrigatório');
       setEmailError('Email é obrigatório');
       isValid = false;
     } else {
@@ -45,9 +48,11 @@ const Cadastro = () => {
     }
 
     if (!senha) {
+      toast.error('Senha é obrigatória');
       setSenhaError('Senha é obrigatória');
       isValid = false;
     } else if (senha.length < 8) {
+      toast.error('A senha deve ter ao menos 8 caracteres');
       setSenhaError('A senha deve ter ao menos 8 caracteres');
       isValid = false;
     } else {
@@ -55,9 +60,11 @@ const Cadastro = () => {
     }
 
     if (!confirmacaoSenha) {
+      toast.error('Confirmação de senha é obrigatória');
       setConfirmacaoError('Confirmação de senha é obrigatória');
       isValid = false;
     } else if (senha !== confirmacaoSenha) {
+      toast.error('As senhas não coincidem');
       setConfirmacaoError('As senhas não coincidem');
       isValid = false;
     } else {
@@ -79,7 +86,10 @@ const Cadastro = () => {
         senha,
         tipo: 'CLIENTE'
       });
-      navigate('/login');
+      toast.success('Cadastro realizado com sucesso!');
+      setTimeout(() => {
+        navigate('/login');
+      }, 1000);
     } catch (error) {
       toast.error('Erro no cadastro: ' + (error.response?.data || error.message));
       const errorMessage = error.response?.data?.message ||
@@ -93,7 +103,7 @@ const Cadastro = () => {
   return (
     <div className="login-container">
       <ToastContainer
-        position="top-right"
+        position="top-center"
         autoClose={3000}
         hideProgressBar={false}
         newestOnTop={true}

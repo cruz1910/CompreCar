@@ -33,18 +33,6 @@
   transition: transform 0.2s;
 }
 
-.add-to-cart-btn{
-  padding: 8px 12px;
-  background-color: #2563eb;
-  color: white;
-  border: none;
-  cursor: pointer;
-  border-radius: 6px;
-}
-
-.add-to-cart-btn:hover{
-  opacity: 0.8;
-}
 .vehicle-card:hover {
   transform: translateY(-5px);
 }
@@ -75,9 +63,22 @@
 }
 
 .description {
-  color: #6b7280;
-  font-size: 0.9em;
-  line-height: 1.4;
+  white-space: pre-line;  /* permite quebra por \n */
+  overflow: hidden;
+  display: block;
+}
+
+.add-to-cart-btn {
+  padding: 8px 12px;
+  background-color: #2563eb;
+  color: white;
+  border: none;
+  cursor: pointer;
+  border-radius: 6px;
+}
+
+.add-to-cart-btn:hover {
+  opacity: 0.8;
 }
 
 .loading {
